@@ -190,12 +190,12 @@ Usage:
 		
 		self.clr_cnt()
 		#print(self.src)
-		src2 = re.compile(self.src)
+		src_compiled = re.compile(self.src, flags = re.DOTALL)
 		
 		self.cnt = -1
-		patched,self.cnt = re.subn(src2, repl=self.dst, string=binary)        
+		patched,self.cnt = re.subn(src_compiled, repl=self.dst, string=binary)        
 
-		print(src2)
+		print(src_compiled)
 
 		self.hash_new = zlib.adler32(patched) 
 
