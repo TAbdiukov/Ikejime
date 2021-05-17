@@ -4,3 +4,7 @@ __pycache__
 #anything commercial
 *potify*
 *icrosoft*
+# working formats
+*.elf
+*.exe
+*.orig

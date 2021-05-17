@@ -37,7 +37,7 @@ Usage:
 		# stream
 		self.full_fname = None
 		self.dir = None
-		self._sub_cnt = 0
+		self._cnt = 0
 		
 		self.hash_old = None
 		self.hash_new = None
@@ -93,8 +93,13 @@ Usage:
 		self.reserved = soup[0]
 		self.target = soup[1]
 		
-		self.src = bytes(soup[2], "ascii")
-		self.dst = bytes(soup[3], "ascii")		
+		"""
+		self.src = bytes(soup[2], "raw_unicode_escape")
+		self.dst = bytes(soup[3], "raw_unicode_escape")		
+		"""
+		
+		self.src = bytes(soup[2], "raw_unicode_escape")
+		self.dst = bytes(soup[3], "raw_unicode_escape")		
 		
 		if(soup_cnt >= 5): #flags
 			flags = soup[4]
@@ -102,22 +107,22 @@ Usage:
 	 
 	# technical
 	@property
-	def sub_cnt(self):
-		return self._sub_cnt
+	def cnt(self):
+		return self._cnt
 	
-	@sub_cnt.setter
-	def sub_cnt(self, k):
-		self._sub_cnt = k
+	@cnt.setter
+	def cnt(self, k):
+		self._cnt = k
 	
-	def inc_sub_cnt(self):
-		self.sub_cnt = self.sub_cnt + 1
+	def inc_cnt(self):
+		self.cnt = self.cnt + 1
 
-	def clr_sub_cnt(self):
-		self.sub_cnt = 0
+	def clr_cnt(self):
+		self.cnt = 0
 
 	def find_target(self, guess = ""):
 		std_full_fname = self.target
-		print(guess)
+		print("Main guess: "+str(guess))
 		# Try guess first
 		if(len(guess)):
 			path_guess = Path(guess)
@@ -135,14 +140,15 @@ Usage:
 					
 		# then try in local dir
 		path_local = Path.cwd() / Path(std_full_fname)
-		print(path_local)
-		print(path_local.parent)
-		print(path_local.is_file())
+		print("Guess 2: "+str(path_local))
+		print("Guess 2 local: "+str(path_local.parent))
+
 		if(path_local.is_file()):
 			self.full_fname = std_full_fname
 			self.dir = str(path_local.parent)
 			return ;
 		else:
+			print("Target file not found")
 			assert(0)
 		
 		
@@ -163,10 +169,10 @@ Usage:
 	def help_fillin(self):
 		return self.HELP.format(self.tool_name, self.target)
 	
-    # To be deprecated
+	# To be deprecated
 	def hooked_replace(self):
 		print("replace")
-		self.inc_sub_cnt()
+		self.inc_cnt()
 		return self.dst
 		
 	def perform_patch(self, flag_samelen = True):	
@@ -174,7 +180,7 @@ Usage:
 			assert(len(self.src) == len(self.dst))
 			
 		# valid patch chk
-		assert(len(self.src) > 0)
+		assert(len(str(self.src)) > 0)
 	
 		fp = open(self.full_fname, "rb")
 		binary = fp.read()
@@ -182,13 +188,16 @@ Usage:
 		fp.close()
 		assert(len(binary))
 		
-		self.clr_sub_cnt()
-		print(self.src)
+		self.clr_cnt()
+		#print(self.src)
 		src2 = re.compile(self.src)
-        
-        aftersub = re.subn(src2, repl=self.dst, string=binary)        
-		patched = aftersub(0)
-        self.cnt = aftersub(1)
+		
+		self.cnt = -1
+		patched,self.cnt = re.subn(src2, repl=self.dst, string=binary)        
+
+		print(src2)
+
+		self.hash_new = zlib.adler32(patched) 
 
 		# save results
 		fp = open(self.full_fname, "wb")
@@ -221,14 +230,14 @@ Usage:
 			buf = self.copy_orig()
 			print("Backup saved to: "+buf)
 			self.perform_patch()
-			print("* Matches: "+str(self.sub_cnt))
+			print("* Matches: "+str(self.cnt))
 			
 			old = self.pretty_hash(self.hash_old)
 			new = self.pretty_hash(self.hash_new)
 			
 			print("* Old hash: "+old)
 			print("* New hash: "+new)
-			if(self.sub_cnt > 0):
+			if(self.cnt > 0):
 				print("Patched successfully!")
 			else:
 				print("Patching is unsuccessful. Is patch incompatible?")

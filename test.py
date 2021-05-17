@@ -1,3 +1,3 @@
 import sys
 
-print(sys.argv)
+print(re.sub(r'(foo)', r'\1123', 'foobar'))
