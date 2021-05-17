@@ -92,8 +92,10 @@ Usage:
 		# required data
 		self.reserved = soup[0]
 		self.target = soup[1]
+		
 		self.src = bytes(soup[2], "ascii")
-		self.dst = bytes(soup[3], "ascii")
+		self.dst = bytes(soup[3], "ascii")		
+		
 		if(soup_cnt >= 5): #flags
 			flags = soup[4]
 			self.flag_samelen = int(flags[0])
@@ -161,7 +163,9 @@ Usage:
 	def help_fillin(self):
 		return self.HELP.format(self.tool_name, self.target)
 	
+    # To be deprecated
 	def hooked_replace(self):
+		print("replace")
 		self.inc_sub_cnt()
 		return self.dst
 		
@@ -180,8 +184,12 @@ Usage:
 		
 		self.clr_sub_cnt()
 		print(self.src)
-		patched = re.sub(self.src, self.hooked_replace(), binary)
-		self.hash_new = zlib.adler32(patched) 
+		src2 = re.compile(self.src)
+        
+        aftersub = re.subn(src2, repl=self.dst, string=binary)        
+		patched = aftersub(0)
+        self.cnt = aftersub(1)
+
 		# save results
 		fp = open(self.full_fname, "wb")
 		fp.write(patched)

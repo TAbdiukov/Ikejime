@@ -1,0 +1,6 @@
+.idea
+__pycache__
+*.7z
+#anything commercial
+*potify*
+*icrosoft*
