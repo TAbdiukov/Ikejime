@@ -122,7 +122,7 @@ Usage:
 
 	def find_target(self, guess = ""):
 		std_full_fname = self.target
-		print("Main guess: "+str(guess))
+		#print("Main guess: "+str(guess))
 		# Try guess first
 		if(len(guess)):
 			path_guess = Path(guess)
@@ -194,8 +194,6 @@ Usage:
 		
 		self.cnt = -1
 		patched,self.cnt = re.subn(src_compiled, repl=self.dst, string=binary)        
-
-		print(src_compiled)
 
 		self.hash_new = zlib.adler32(patched) 
 
