@@ -2,7 +2,7 @@
 Patches for kernal and apps
 
 ## Warning
-Patches for high-profile applications such as Spotify, Canva Desktop, AutoCAD - will not be published here.
+Patches for high-profile applications will not be published here.
 
 ## honorable mention
 
