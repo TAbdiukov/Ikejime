@@ -4,7 +4,10 @@ __pycache__
 #anything commercial
 *potify*
 *icrosoft*
+*anva*
+*utoDesk*
 # working formats
 *.elf
 *.exe
 *.orig
+*.msi
