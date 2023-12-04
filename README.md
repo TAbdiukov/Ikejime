@@ -1,8 +1,5 @@
 #  Ikejime (formerly patches-windows)
-Patches for kernal and apps
-
-## Warning
-Patches for high-profile applications will not be published here.
+Patches for kernel and apps. Public set.
 
 ## honorable mention
 
