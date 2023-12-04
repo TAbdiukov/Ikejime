@@ -1,9 +1,9 @@
 #  Ikejime (formerly patches-windows)
 Patches for kernel and apps. Public set.
 
-## honorable mention
+## Honorable mention
 
-TAbdiukov_K10stat_anyCPUpatch.py
+[TAbdiukov_K10stat_anyCPUpatch.py](./TAbdiukov_K10stat_anyCPUpatch.py)
 
 ## Inspiration
 
