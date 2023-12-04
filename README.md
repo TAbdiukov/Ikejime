@@ -3,7 +3,7 @@ Patches for desktop libraries and apps. Public set.
 
 ## Honorable mention
 
-[TAbdiukov_K10stat_anyCPUpatch.py](./TAbdiukov_K10stat_anyCPUpatch.py)
+* [TAbdiukov_K10stat_anyCPUpatch.py](./TAbdiukov_K10stat_anyCPUpatch.py)
 
 ## Inspiration
 
