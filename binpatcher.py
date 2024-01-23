@@ -266,7 +266,7 @@ Usage:
             if(self.cnt > 0):
                 print("Patched successfully!")
             else:
-                print("Patching is unsuccessful. Is patch incompatible?")
+                print("Patching failed. Is patch incompatible?")
         
             print("="*width)
             
