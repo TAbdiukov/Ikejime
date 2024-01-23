@@ -74,7 +74,7 @@ Usage:
 			if(len(patch)):
 				return True
 			# data entered through side channels
-			elif(self.is_target_aquired()):
+			elif(self.is_target_acquired()):
 				return True
 			return False
 					
@@ -153,7 +153,7 @@ Usage:
 		
 		
 	@staticmethod
-	def pretty_hash(k):
+	def hash_pretty(k):
 		return (hex(k).split("x")[-1].upper())
 			
 		# then try in local dir
@@ -162,7 +162,7 @@ Usage:
 			self.full_fname = std_full_fname
 			self.dir = str(path_local.parent)
 		
-	def is_target_aquired(self):
+	def is_target_acquired(self):
 		# self.dst not needed
 		return ((len(self.dir) > 0) and (len(self.full_fname) > 0) and (len(self.src) > 0))
 		
@@ -170,7 +170,7 @@ Usage:
 		return self.HELP.format(self.tool_name, self.target)
 	
 	# To be deprecated
-	def hooked_replace(self):
+	def replace_hook(self):
 		print("replace")
 		self.inc_cnt()
 		return self.dst
@@ -209,10 +209,10 @@ Usage:
 		copyfile(src, dst)
 		return dst
 		
-	def payload(self, weigh = 40):
+	def payload(self, width = 40):
 		valid = self.interpret_input()
 	
-		print("="*weigh)
+		print("="*width)
 		if(not valid):
 			print(self.help_fillin())
 		else:
@@ -224,14 +224,14 @@ Usage:
 
 			self.find_target(guess = self.target)
 
-			assert(self.is_target_aquired)
+			assert(self.is_target_acquired)
 			buf = self.copy_orig()
 			print("Backup saved to: "+buf)
 			self.perform_patch()
 			print("* Matches: "+str(self.cnt))
 			
-			old = self.pretty_hash(self.hash_old)
-			new = self.pretty_hash(self.hash_new)
+			old = self.hash_pretty(self.hash_old)
+			new = self.hash_pretty(self.hash_new)
 			
 			print("* Old hash: "+old)
 			print("* New hash: "+new)
@@ -240,7 +240,7 @@ Usage:
 			else:
 				print("Patching is unsuccessful. Is patch incompatible?")
 		
-			print("="*weigh)
+			print("="*width)
 			
 if __name__ == '__main__':
 	obj = Patcher(argv = sys.argv)
