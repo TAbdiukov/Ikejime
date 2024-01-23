@@ -11,6 +11,14 @@ import zlib
 # IMPORTED simple_eval
 from simpleeval import simple_eval
 
+import logging 
+  
+# creating the logger object 
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+ 
+
+
 class Cook:
     DEF_PREFIX = 'PTCH101'
     FILE = 'default_binfile.exe'
@@ -150,7 +158,7 @@ Usage:
 
     def find_target(self, guess = ""):
         std_full_fname = self.target
-        #print("Main guess: "+str(guess))
+        #logger.info("Main guess: "+str(guess))
         # Try guess first
         if(len(guess)):
             path_guess = Path(guess)
@@ -168,15 +176,15 @@ Usage:
                     
         # then try in local dir
         path_local = Path.cwd() / Path(std_full_fname)
-        print("Guess 2: "+str(path_local))
-        print("Guess 2 local: "+str(path_local.parent))
+        logger.info("Guess 2: "+str(path_local))
+        logger.info("Guess 2 local: "+str(path_local.parent))
 
         if(path_local.is_file()):
             self.full_fname = std_full_fname
             self.dir = str(path_local.parent)
             return ;
         else:
-            print("Target file not found")
+            logger.info("Target file not found")
             assert(0)
         
         
@@ -199,7 +207,7 @@ Usage:
     
     # To be deprecated
     def replace_hook(self):
-        print("replace")
+        logger.info("replace")
         self.inc_cnt()
         return self.dst
         
@@ -217,7 +225,7 @@ Usage:
         assert(len(binary))
         
         self.clr_cnt()
-        #print(self.src)
+        #logger.info(self.src)
         src_compiled = re.compile(self.src, flags = re.DOTALL)
         
         self.cnt = -1
@@ -240,35 +248,35 @@ Usage:
     def payload(self, width = 40):
         valid = self.interpret_input()
     
-        print("="*width)
+        logger.info("="*width)
         if(not valid):
-            print(self.help_fillin())
+            logger.info(self.help_fillin())
         else:
             self.patch_unpack()
-            print("Patch tgt: "+str(self.target))
-            print("Patch src: "+str(self.src))
-            print("Patch dst: "+str(self.dst))
-            print("")
+            logger.info("Patch tgt: "+str(self.target))
+            logger.info("Patch src: "+str(self.src))
+            logger.info("Patch dst: "+str(self.dst))
+            logger.info("")
 
             self.find_target(guess = self.target)
 
             assert(self.is_target_acquired)
             buf = self.copy_orig()
-            print("Backup saved to: "+buf)
+            logger.info("Backup saved to: "+buf)
             self.perform_patch()
-            print("* Matches: "+str(self.cnt))
+            logger.info("* Matches: "+str(self.cnt))
             
             old = self.hash_pretty(self.hash_old)
             new = self.hash_pretty(self.hash_new)
             
-            print("* Old hash: "+old)
-            print("* New hash: "+new)
+            logger.info("* Old hash: "+old)
+            logger.info("* New hash: "+new)
             if(self.cnt > 0):
-                print("Patched successfully!")
+                logger.info("Patched successfully!")
             else:
-                print("Patching failed. Is patch incompatible?")
+                logger.info("Patching failed. Is patch incompatible?")
         
-            print("="*width)
+            logger.info("="*width)
             
 if __name__ == '__main__':
     obj = Patcher(argv = sys.argv)
