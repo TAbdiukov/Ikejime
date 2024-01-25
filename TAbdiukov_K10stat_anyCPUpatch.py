@@ -1,10 +1,5 @@
-import re
 
 from binpatcher import *
-
-DEF_PREFIX = "PTCH101"
-BINFILE = "K10STAT.exe"
-DEF_FLAGS = "0"
 
 def yes_or_no(question):
     answer = input(question + "(Y/N): ").lower().strip()
@@ -18,10 +13,6 @@ def yes_or_no(question):
         return True
     else:
         return False
-
-def gen_patchstring(old, new, prefix = DEF_PREFIX, binfile = BINFILE, flags = DEF_FLAGS):
-    s = "{0}|||{1}|||{2}|||{3}|||{4}".format(prefix, binfile, old, new, flags)
-    return s
 
 if __name__ == '__main__':
     #   OllyDbg notes:
@@ -84,7 +75,7 @@ if __name__ == '__main__':
     disclaimer = "The patch is offered as-is. By using this patch, you agree you are liable for the use of this patch and patched software, the author of the patch neither the author of K10Stat takes NO responsibility for the damages!! Do you agree? "
     resp = yes_or_no(disclaimer)
     if(resp == False):
-        print("OK, bye..")
+        print("Exiting..")
     elif(resp == True):
         print("Loading data")
         
