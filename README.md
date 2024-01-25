@@ -1,13 +1,11 @@
-#  Ikejime (formerly patches-windows)
+#  Ikejime
 Patches for desktop libraries and apps. Public set.
+
+Ikejime is inspired by [Japanese ikejime technique](https://en.wikipedia.org/wiki/Ikejime)
 
 ## Honorable mention
 
-* [TAbdiukov_K10stat_anyCPUpatch.py](./TAbdiukov_K10stat_anyCPUpatch.py)
-
-## Inspiration
-
-Read at [Project Tegaki](https://github.com/TAbdiukov/Project-Tegaki)
+* [p-K10stat_anyCPUpatch.py](./p-K10stat_anyCPUpatch.py)
 
 ## See also
 *Tweaking and patching,*  

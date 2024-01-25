@@ -193,7 +193,6 @@ Usage:
 			logger.info("Target file not found")
 			assert(0)
 		
-		
 	@staticmethod
 	def hash_pretty(k):
 		return (hex(k).split("x")[-1].upper())
@@ -217,7 +216,7 @@ Usage:
 		self.inc_cnt()
 		return self.dst
 		
-	def perform_patch(self, flag_samelen = True):   
+	def uncook_basic(self, flag_samelen = True):   
 		if(self.flag_samelen):
 			assert(len(self.src) == len(self.dst))
 			
@@ -244,17 +243,17 @@ Usage:
 		fp.write(patched)
 		fp.close()
 		
-	def copy_orig(self, copy_overwrite = False, suffix = ".orig"):
+	def copy_orig(self, force_overwrite = False, suffix = ".orig"):
 		src = self.full_fname
 		dst = self.full_fname + suffix
 		
-		if(not os.path.exists(dst) or copy_overwrite):
+		if(not os.path.exists(dst) or force_overwrite):
 			copyfile(src, dst)
 			return dst
 		else:
 			return None
 		
-	def payload(self, copy_overwrite = False, width = 40):
+	def payload(self, force_overwrite = False, width = 40):
 		valid = self.interpret_input()
 	
 		logger.info("="*width)
@@ -272,7 +271,7 @@ Usage:
 			assert(self.is_target_acquired)
 			buf = self.copy_orig()
 			logger.info("Backup saved to: "+str(buf))
-			self.perform_patch()
+			self.uncook_basic()
 			logger.info("* Matches: "+str(self.cnt))
 			
 			old = self.hash_pretty(self.hash_old)
