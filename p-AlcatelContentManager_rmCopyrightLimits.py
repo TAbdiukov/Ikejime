@@ -14,4 +14,3 @@ if __name__ == '__main__':
 	
 	obj = binpatcher.Patcher(patch = "PTCH101|||ContentManager.exe|||" +old + "|||" + new + "|||0")
 	obj.payload()
-

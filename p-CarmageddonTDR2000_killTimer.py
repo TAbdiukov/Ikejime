@@ -15,4 +15,3 @@ if __name__ == '__main__':
 	
 	obj = binpatcher.Patcher(patch = "PTCH101|||TDR2000.exe|||" +old + "|||" + new + "|||0")
 	obj.payload()
-

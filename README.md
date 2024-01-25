@@ -1,7 +1,7 @@
 #  Ikejime
 Patches for desktop libraries and apps. Public set.
 
-Ikejime is inspired by [Japanese ikejime technique](https://en.wikipedia.org/wiki/Ikejime)
+Ikejime is inspired by [Japanese ikejime technique](https://en.wikipedia.org/wiki/Ikejime).
 
 ## Honorable mention
 
