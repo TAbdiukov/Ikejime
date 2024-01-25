@@ -5,6 +5,7 @@ from pathlib import Path
 # for args
 import sys
 # for backups
+import os
 from shutil import copyfile
 # for quick hash
 import zlib
@@ -14,8 +15,11 @@ from simpleeval import simple_eval
 import logging 
   
 # creating the logger object 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+VERBOSE = False
+logger = logging.getLogger()
+logging.basicConfig()
+if(VERBOSE):
+	logger.setLevel(logging.DEBUG)
  
 
 
@@ -50,7 +54,6 @@ class Commits:
 	def push(self):
 		for commit in self.commits:
 			commit.payload()
-
 
 class Patcher:
 	DELIM = "|||"
@@ -241,14 +244,17 @@ Usage:
 		fp.write(patched)
 		fp.close()
 		
-	def copy_orig(self, suffix = ".orig"):
+	def copy_orig(self, copy_overwrite = False, suffix = ".orig"):
 		src = self.full_fname
 		dst = self.full_fname + suffix
 		
-		copyfile(src, dst)
-		return dst
+		if(not os.path.exists(dst) or copy_overwrite):
+			copyfile(src, dst)
+			return dst
+		else:
+			return None
 		
-	def payload(self, width = 40):
+	def payload(self, copy_overwrite = False, width = 40):
 		valid = self.interpret_input()
 	
 		logger.info("="*width)
@@ -265,7 +271,7 @@ Usage:
 
 			assert(self.is_target_acquired)
 			buf = self.copy_orig()
-			logger.info("Backup saved to: "+buf)
+			logger.info("Backup saved to: "+str(buf))
 			self.perform_patch()
 			logger.info("* Matches: "+str(self.cnt))
 			
