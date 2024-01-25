@@ -208,7 +208,7 @@ Usage:
 	def help_fillin(self):
 		return self.HELP.format(self.tool_name, self.target)
 	
-	# To be deprecated
+	# May be deprecated
 	def replace_hook(self):
 		logger.info("replace")
 		self.inc_cnt()
