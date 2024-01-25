@@ -1,6 +1,6 @@
 import binpatcher
 
-AUTHOR = TAbdiukov
+AUTHOR = "TAbdiukov"
 
 if __name__ == '__main__':
 	# Old: FF5010 3C01 0F85C9050000

@@ -1,6 +1,6 @@
 import binpatcher
 
-AUTHOR = TAbdiukov
+AUTHOR = "TAbdiukov"
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 from binpatcher import *
 
-AUTHOR = TAbdiukov
+AUTHOR = "TAbdiukov"
 
 def yes_or_no(question):
     answer = input(question + "(Y/N): ").lower().strip()
