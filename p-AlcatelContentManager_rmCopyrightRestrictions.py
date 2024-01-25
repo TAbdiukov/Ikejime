@@ -1,5 +1,7 @@
 import binpatcher
 
+AUTHOR = TAbdiukov
+
 if __name__ == '__main__':
 	# Old: FF5010 3C01 0F85C9050000
 	# New: FF5010 3C01 909090909090

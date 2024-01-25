@@ -1,5 +1,7 @@
 import binpatcher
 
+AUTHOR = TAbdiukov
+
 if __name__ == '__main__':
 	# D8642404D9993C010000EB0AC7813C01000000000000D9813C010000
 	# 0x64 [float sub] -> 0x44 [float add] for reverse function
