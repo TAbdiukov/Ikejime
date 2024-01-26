@@ -1,4 +1,4 @@
-import ikejime
+import ikepatcher
 
 AUTHOR = "TAbdiukov"
 
