@@ -2,7 +2,6 @@ import ikepatcher
 
 AUTHOR = "TAbdiukov"
 
-
 if __name__ == '__main__':
 	# D8642404D9993C010000EB0AC7813C01000000000000D9813C010000
 	
@@ -14,5 +13,4 @@ if __name__ == '__main__':
 	new = "\xD8\x64\x24\x04\x90\x90\x90\x90\x90\x90\g<2>\g<3>"
 	
 	obj = ikepatcher.Patcher(Cook(old, new, "TDR2000.exe", "0"))
-
 	obj.payload()
