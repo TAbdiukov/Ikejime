@@ -13,5 +13,6 @@ if __name__ == '__main__':
 	# see https://stackoverflow.com/q/5984633
 	new = "\xD8\x64\x24\x04\x90\x90\x90\x90\x90\x90\g<2>\g<3>"
 	
-	obj = ikejime.Patcher(patch = "PTCH101|||TDR2000.exe|||" +old + "|||" + new + "|||0")
+	obj = ikepatcher.Patcher(Cook(old, new, "TDR2000.exe", "0"))
+
 	obj.payload()
