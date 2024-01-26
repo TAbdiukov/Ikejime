@@ -13,7 +13,9 @@ import zlib
 from simpleeval import simple_eval
 
 import logging 
-  
+# for delays
+import time
+
 # creating the logger object 
 VERBOSE = True
 logger = logging.getLogger()
@@ -234,7 +236,7 @@ Usage:
 		self.inc_cnt()
 		return self.dst
 		
-	def patch_prep(self):   
+	def do_patch(self):   
 		if(self.flag_samelen):
 			assert(len(self.src) == len(self.dst))
 			
@@ -257,9 +259,17 @@ Usage:
 		self.hash_new = zlib.adler32(patched) 
 
 		# save results
-		fp = open(self.full_fname, "wb")
-		fp.write(patched)
-		fp.close()
+		try:
+			fp = open(self.full_fname, "wb")
+			fp.write(patched)
+			fp.close()
+		except PermissionError:
+			return "Fail - permission denied"
+			
+		if(self.cnt < 1):
+			return "Fail - not found"
+			
+		return "Success"
 		
 	def copy_orig(self, force_overwrite = False, suffix = ".orig"):
 		src = self.full_fname
@@ -271,7 +281,7 @@ Usage:
 		else:
 			return None
 		
-	def payload(self, force_overwrite = False, width = 40):
+	def payload(self, do_backup = True, force_overwrite = False, width = 40):
 		valid = self.interpret_input()
 	
 		logger.info("="*width)
@@ -287,9 +297,12 @@ Usage:
 			self.find_target(guess = self.target)
 
 			assert(self.is_target_acquired)
-			buf = self.copy_orig()
-			logger.info("Backup saved to: "+str(buf))
-			self.patch_prep()
+			if(do_backup):
+				buf = self.copy_orig(force_overwrite)
+				logger.info("Backup saved to: "+str(buf))
+			
+			patch_result = self.do_patch()
+			
 			logger.info("* Matches: "+str(self.cnt))
 			
 			old = self.hash_pretty(self.hash_old)
@@ -297,12 +310,52 @@ Usage:
 			
 			logger.info("* Old hash: "+old)
 			logger.info("* New hash: "+new)
-			if(self.cnt > 0):
-				logger.info("Patched successfully!")
-			else:
-				logger.info("Patching failed. Is patch incompatible?")
+
+			logger.info(patch_result)
 		
 			logger.info("="*width)
+
+	def payload_continuous(self, do_backup = False, force_overwrite = False, width = 40, delay=0.5):
+		valid = self.interpret_input()
+	
+		logger.info("="*width)
+		if(not valid):
+			logger.info(self.help_fillin())
+		else:
+			self.uncook_basic()
+			logger.info("CONTINUOUS MODE")
+			logger.info("Patch tgt: "+str(self.target))
+			logger.info("Patch src: "+str(self.src))
+			logger.info("Patch dst: "+str(self.dst))
+			logger.info("")
+
+			self.find_target(guess = self.target)
+
+			assert(self.is_target_acquired)
+			if(do_backup):
+				buf = self.copy_orig(force_overwrite)
+				logger.info("Backup saved to: "+str(buf))
+			patch_result = self.do_patch()
+			
+			logger.info("* Matches: "+str(self.cnt))
+			
+			old = self.hash_pretty(self.hash_old)
+			new = self.hash_pretty(self.hash_new)
+			
+			finish = False
+			while(not finish):
+				if(patch_result.startswith("S")):
+					print("!", end="", flush=True)
+					logger.info("Patch success")
+					logger.info("* Old hash: "+old)
+					logger.info("* New hash: "+new)
+					finish = True
+				else:
+					print("F", end="", flush=True)
+					time.sleep(delay)
+
+			logger.info("="*width)
+
 			
 if __name__ == '__main__':
 	obj = Patcher(argv = sys.argv)
