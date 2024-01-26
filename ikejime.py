@@ -55,6 +55,24 @@ class Commits:
 		for commit in self.commits:
 			commit.payload()
 
+class Misc:
+	def __init__(self):
+		pass
+	
+	def yes_or_no(question):
+		answer = input(question + "(Y/N): ").lower().strip()
+		print("")
+		while not(answer == "y" or answer == "yes" or \
+		answer == "n" or answer == "no"):
+			print("Input yes or no")
+			answer = input(question + "(y/n):").lower().strip()
+			print("")
+		if answer[0] == "y":
+			return True
+		else:
+			return False
+
+
 class Patcher:
 	DELIM = "|||"
 	HELP = """{0} - patches {1}
@@ -119,33 +137,7 @@ Usage:
 			elif(self.is_target_acquired()):
 				return True
 			return False
-					
-	
-	def patch_unpack(self):
-		s = self.patch
 
-		d = self.DELIM
-		
-		soup = s.__str__().split(d)
-		soup_cnt = len(soup)
-		# VISION:
-		# "PTCHv1.25|||Game.exe|||b'PC_AI'|||b'\x00\x00\x00\x00\x00'|||(flags)"
-		assert(soup_cnt >= 4)
-		# required data
-		self.reserved = soup[0]
-		self.target = soup[1]
-		
-		"""
-		self.src = bytes(soup[2], "raw_unicode_escape")
-		self.dst = bytes(soup[3], "raw_unicode_escape")     
-		"""
-		
-		self.src = bytes(soup[2], "raw_unicode_escape")
-		self.dst = bytes(soup[3], "raw_unicode_escape")     
-		
-		if(soup_cnt >= 5): #flags
-			flags = soup[4]
-			self.flag_samelen = int(flags[0])
 	 
 	# technical
 	@property
@@ -202,6 +194,32 @@ Usage:
 		if(path_local.is_file()):
 			self.full_fname = std_full_fname
 			self.dir = str(path_local.parent)
+
+	def uncook_basic(self):
+		s = self.patch
+
+		d = self.DELIM
+		
+		soup = s.__str__().split(d)
+		soup_cnt = len(soup)
+		# VISION:
+		# "PTCHv1.25|||Game.exe|||b'PC_AI'|||b'\x00\x00\x00\x00\x00'|||(flags)"
+		assert(soup_cnt >= 4)
+		# required data
+		self.reserved = soup[0]
+		self.target = soup[1]
+		
+		"""
+		self.src = bytes(soup[2], "raw_unicode_escape")
+		self.dst = bytes(soup[3], "raw_unicode_escape")     
+		"""
+		
+		self.src = bytes(soup[2], "raw_unicode_escape")
+		self.dst = bytes(soup[3], "raw_unicode_escape")     
+		
+		if(soup_cnt >= 5): #flags
+			flags = soup[4]
+			self.flag_samelen = int(flags[0])
 		
 	def is_target_acquired(self):
 		# self.dst not needed
@@ -216,7 +234,7 @@ Usage:
 		self.inc_cnt()
 		return self.dst
 		
-	def uncook_basic(self, flag_samelen = True):   
+	def patch_prep(self):   
 		if(self.flag_samelen):
 			assert(len(self.src) == len(self.dst))
 			
@@ -260,7 +278,7 @@ Usage:
 		if(not valid):
 			logger.info(self.help_fillin())
 		else:
-			self.patch_unpack()
+			self.uncook_basic()
 			logger.info("Patch tgt: "+str(self.target))
 			logger.info("Patch src: "+str(self.src))
 			logger.info("Patch dst: "+str(self.dst))
@@ -271,7 +289,7 @@ Usage:
 			assert(self.is_target_acquired)
 			buf = self.copy_orig()
 			logger.info("Backup saved to: "+str(buf))
-			self.uncook_basic()
+			self.patch_prep()
 			logger.info("* Matches: "+str(self.cnt))
 			
 			old = self.hash_pretty(self.hash_old)

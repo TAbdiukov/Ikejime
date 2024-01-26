@@ -1,4 +1,4 @@
-import binpatcher
+import ikejime
 
 AUTHOR = "TAbdiukov"
 
@@ -12,5 +12,5 @@ if __name__ == '__main__':
 	# see https://stackoverflow.com/q/5984633
 	new = "\g<1>\g<2>\x90\x90\x90\x90\x90\x90"
 	
-	obj = binpatcher.Patcher(patch = "PTCH101|||ContentManager.exe|||" +old + "|||" + new + "|||0")
+	obj = ikejime.Patcher(patch = "PTCH101|||ContentManager.exe|||" +old + "|||" + new + "|||0")
 	obj.payload()

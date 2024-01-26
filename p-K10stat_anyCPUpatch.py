@@ -1,19 +1,6 @@
-from binpatcher import *
+from ikejime import *
 
 AUTHOR = "TAbdiukov"
-
-def yes_or_no(question):
-    answer = input(question + "(Y/N): ").lower().strip()
-    print("")
-    while not(answer == "y" or answer == "yes" or \
-    answer == "n" or answer == "no"):
-        print("Input yes or no")
-        answer = input(question + "(y/n):").lower().strip()
-        print("")
-    if answer[0] == "y":
-        return True
-    else:
-        return False
 
 if __name__ == '__main__':
     #   OllyDbg notes:
@@ -73,8 +60,8 @@ if __name__ == '__main__':
     #   -   Found potentially interesting logic (will not be used):
     #   0040EAA6: "Jump from 40E7CA" (jump over the whole check?)
     #   Finally, 40EAB9 "RETN 10"
-    disclaimer = "The patch is offered as-is. By using this patch, you agree you are liable for the use of this patch and patched software, the author of the patch neither the author of K10Stat takes NO responsibility for the damages!! Do you agree? "
-    resp = yes_or_no(disclaimer)
+    disclaimer = "By using this patch, you agree you accept the risk pertinent to this patch and patched software. Agree? "
+    resp = Misc.yes_or_no(disclaimer)
     if(resp == False):
         print("Exiting..")
     elif(resp == True):
