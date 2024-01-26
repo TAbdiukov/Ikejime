@@ -28,7 +28,7 @@ class Cook:
 	FILE = 'default_binfile.exe'
 	DEF_FLAGS = '0'
 
-	def __init__(self, old, new, prefix = DEF_PREFIX, file = FILE, flags = DEF_FLAGS):
+	def __init__(self, old, new, file = FILE, flags = DEF_FLAGS, prefix = DEF_PREFIX):
 		self.old = old
 		self.new = new
 		self.prefix = prefix
