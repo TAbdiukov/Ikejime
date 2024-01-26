@@ -267,7 +267,7 @@ Usage:
 			return "Fail - permission denied"
 			
 		if(self.cnt < 1):
-			return "Fail - not found"
+			return "Fail - No matches found"
 			
 		return "Success"
 		
@@ -345,7 +345,7 @@ Usage:
 			finish = False
 			while(not finish):
 				if(patch_result.startswith("S")):
-					print("!", end="", flush=True)
+					print("S", flush=True)
 					logger.info("Patch success")
 					logger.info("* Old hash: "+old)
 					logger.info("* New hash: "+new)
