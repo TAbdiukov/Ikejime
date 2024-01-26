@@ -15,7 +15,7 @@ from simpleeval import simple_eval
 import logging 
   
 # creating the logger object 
-VERBOSE = False
+VERBOSE = True
 logger = logging.getLogger()
 logging.basicConfig()
 if(VERBOSE):
