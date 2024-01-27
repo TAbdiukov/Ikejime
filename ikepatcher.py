@@ -30,6 +30,8 @@ class Cook:
 	FILE = 'default_binfile.exe'
 	DEF_FLAGS = '0'
 
+	DELIM = "|||"
+
 	def __init__(self, old, new, file = FILE, flags = DEF_FLAGS, prefix = DEF_PREFIX):
 		self.old = old
 		self.new = new
@@ -40,6 +42,29 @@ class Cook:
 	def cookBasic(self):
 		s = "{0}|||{1}|||{2}|||{3}|||{4}".format(self.prefix, self.file, self.old, self.new, self.flags)
 		return s
+		
+	def uncook_basic(patch, s=""):
+		d = Cook.DELIM
+		
+		if(len(s) < 1):
+			s = patch.txt_input
+
+		soup = s.__str__().split(d)
+		soup_cnt = len(soup)
+		# VISION:
+		# "PTCHv1.25|||Game.exe|||b'PC_AI'|||b'\x00\x00\x00\x00\x00'|||(flags)"
+		assert(soup_cnt >= 4)
+
+		# required data
+		patch.reserved = soup[0]
+		patch.target = soup[1]
+		
+		patch.src = bytes(soup[2], "raw_unicode_escape")
+		patch.dst = bytes(soup[3], "raw_unicode_escape")     
+		
+		if(soup_cnt >= 5): #flags
+			flags = soup[4]
+			patch.flag_samelen = int(flags[0])
 		
 	def __str__(self):
 		return self.cookBasic()
@@ -76,7 +101,6 @@ class Misc:
 
 
 class Patcher:
-	DELIM = "|||"
 	HELP = """{0} - patches {1}
 Usage:
 {0} (when in software directory) OR
@@ -194,27 +218,6 @@ Usage:
 	@staticmethod
 	def hash_pretty(k):
 		return (hex(k).split("x")[-1].upper())
-
-	def uncook_basic(self):
-		s = self.txt_input
-		d = self.DELIM
-		
-		soup = s.__str__().split(d)
-		soup_cnt = len(soup)
-		# VISION:
-		# "PTCHv1.25|||Game.exe|||b'PC_AI'|||b'\x00\x00\x00\x00\x00'|||(flags)"
-		assert(soup_cnt >= 4)
-
-		# required data
-		self.reserved = soup[0]
-		self.target = soup[1]
-		
-		self.src = bytes(soup[2], "raw_unicode_escape")
-		self.dst = bytes(soup[3], "raw_unicode_escape")     
-		
-		if(soup_cnt >= 5): #flags
-			flags = soup[4]
-			self.flag_samelen = int(flags[0])
 		
 	def is_target_acquired(self):
 		# self.dst not needed
@@ -281,7 +284,7 @@ Usage:
 		if(not valid):
 			logger.info(self.help_fillin())
 		else:
-			self.uncook_basic()
+			Cook.uncook_basic(self)
 			logger.info("Patch tgt: "+str(self.target))
 			logger.info("Patch src: "+str(self.src))
 			logger.info("Patch dst: "+str(self.dst))
@@ -315,7 +318,7 @@ Usage:
 		if(not valid):
 			logger.info(self.help_fillin())
 		else:
-			self.uncook_basic()
+			Cook.uncook_basic(self)
 			logger.info("CONTINUOUS MODE")
 			logger.info("Patch tgt: "+str(self.target))
 			logger.info("Patch src: "+str(self.src))
