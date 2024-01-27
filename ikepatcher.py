@@ -169,6 +169,7 @@ Usage:
 		# Try guess first
 		if(len(guess)):
 			path_guess = Path(guess)
+			logger.info("Guess 2: "+str(guess))
 			if(path_guess.is_file()):
 				self.full_fname = Path(guess)
 				return ;
@@ -181,8 +182,7 @@ Usage:
 					
 		# then try in local dir
 		path_local = Path(Path.cwd(), Path(std_full_fname))
-		logger.info("Guess 2: "+str(path_local))
-		logger.info("Guess 2 local: "+str(path_local.parent))
+		logger.info("Guess 3: "+str(path_local))
 
 		if(path_local.is_file()):
 			self.full_fname = std_full_fname
