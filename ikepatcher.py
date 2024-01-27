@@ -84,12 +84,13 @@ Usage:
 {0} [directory]/{1}
 """
 
-	def __init__(self, patch = "", argv = [], kwargs = {}):
+	def __init__(self, txt_input = "", argv = [], kwargs = {}):
 		for k,v in kwargs.items():
 			setattr(self, k, v)
 		
-		self.argv = argv
-		self.patch = patch
+		self.argv = argv if argv else sys.argv
+		self.txt_input = txt_input
+		self.guess = ""
 		
 		# important data
 		self.target = "(unnamed_target).exe"
@@ -98,7 +99,6 @@ Usage:
 		
 		# stream
 		self.full_fname = None
-		self.dir = None
 		self._cnt = 0
 		
 		self.hash_old = None
@@ -116,7 +116,7 @@ Usage:
 		except: 
 			self.tool_name = "(patcher)"
 		user_argv = self.argv[1:]
-		patch = self.patch
+		txt_input = self.txt_input
 		
 		# if argv passed
 		if(len(user_argv)):
@@ -124,21 +124,27 @@ Usage:
 			# if first argv is HELP
 			if(first.lower() == "help"):
 				return False
+			# if first arg is a file/dir path
+			elif(Path(first).exists()):
+				# set it as guess
+				self.guess = first
+			# else - must be a patch
 			else:
 				buf = first
 				for s in user_argv[1:]:
 					buf = buf + " " + s
 				# overwrite patch
-				self.patch = buf
+				self.txt_input = buf
 
 				return True
-		else:
-			if(patch is not None):
-				return True
-			# data entered through side channels
-			elif(self.is_target_acquired()):
-				return True
-			return False
+
+		if(txt_input is not None):
+			return True
+		# data entered through side channels
+		elif(self.is_target_acquired()):
+			return True
+
+		return False
 
 	 
 	# technical
@@ -156,32 +162,30 @@ Usage:
 	def clr_cnt(self):
 		self.cnt = 0
 
-	def find_target(self, guess = ""):
+	def find_target(self):
 		std_full_fname = self.target
+		guess = self.guess
 		#logger.info("Main guess: "+str(guess))
 		# Try guess first
 		if(len(guess)):
 			path_guess = Path(guess)
 			if(path_guess.is_file()):
-				self.full_fname = str(guess)
-				self.dir = str(path_guess.parent)
+				self.full_fname = Path(guess)
 				return ;
 			elif(path_guess.is_dir()):
-				guess_new = "{}/{}".format(str(guess), std_full_fname)
+				guess_new = Path(str(guess), std_full_fname)
 				path_guess_new = Path(guess_new)
 				if(path_guess_new.is_file()):
 					self.full_fname = guess_new
-					self.dir = str(path_guess_new.parent)
 					return ;
 					
 		# then try in local dir
-		path_local = Path.cwd() / Path(std_full_fname)
+		path_local = Path(Path.cwd(), Path(std_full_fname))
 		logger.info("Guess 2: "+str(path_local))
 		logger.info("Guess 2 local: "+str(path_local.parent))
 
 		if(path_local.is_file()):
 			self.full_fname = std_full_fname
-			self.dir = str(path_local.parent)
 			return ;
 		else:
 			logger.info("Target file not found")
@@ -190,15 +194,9 @@ Usage:
 	@staticmethod
 	def hash_pretty(k):
 		return (hex(k).split("x")[-1].upper())
-			
-		# then try in local dir
-		path_local = Path(std_full_fname).resolve()
-		if(path_local.is_file()):
-			self.full_fname = std_full_fname
-			self.dir = str(path_local.parent)
 
 	def uncook_basic(self):
-		s = self.patch
+		s = self.txt_input
 
 		d = self.DELIM
 		
@@ -225,7 +223,7 @@ Usage:
 		
 	def is_target_acquired(self):
 		# self.dst not needed
-		return ((len(self.dir) > 0) and (len(self.full_fname) > 0) and (len(self.src) > 0))
+		return ((len(self.full_fname) > 0) and (len(self.src) > 0))
 		
 	def help_fillin(self):
 		return self.HELP.format(self.tool_name, self.target)
@@ -273,7 +271,7 @@ Usage:
 		
 	def copy_orig(self, force_overwrite = False, suffix = ".orig"):
 		src = self.full_fname
-		dst = self.full_fname + suffix
+		dst = self.full_fname.with_suffix(suffix)
 		
 		if(not os.path.exists(dst) or force_overwrite):
 			copyfile(src, dst)
@@ -294,7 +292,7 @@ Usage:
 			logger.info("Patch dst: "+str(self.dst))
 			logger.info("")
 
-			self.find_target(guess = self.target)
+			self.find_target()
 
 			assert(self.is_target_acquired)
 			if(do_backup):
@@ -329,7 +327,7 @@ Usage:
 			logger.info("Patch dst: "+str(self.dst))
 			logger.info("")
 
-			self.find_target(guess = self.target)
+			self.find_target()
 
 			assert(self.is_target_acquired)
 			if(do_backup):
