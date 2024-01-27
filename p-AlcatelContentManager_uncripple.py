@@ -12,5 +12,5 @@ if __name__ == '__main__':
 	# see https://stackoverflow.com/q/5984633
 	new = "\g<1>\g<2>\x90\x90\x90\x90\x90\x90"
 	
-	obj = ikepatcher.Patcher(Cook(old, new, "ContentManager.exe", "0")	
+	obj = ikepatcher.Patcher(ikepatcher.Cook(old, new, "ContentManager.exe", "0")	
 	obj.payload()
