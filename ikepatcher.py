@@ -197,7 +197,6 @@ Usage:
 
 	def uncook_basic(self):
 		s = self.txt_input
-
 		d = self.DELIM
 		
 		soup = s.__str__().split(d)
@@ -205,14 +204,10 @@ Usage:
 		# VISION:
 		# "PTCHv1.25|||Game.exe|||b'PC_AI'|||b'\x00\x00\x00\x00\x00'|||(flags)"
 		assert(soup_cnt >= 4)
+
 		# required data
 		self.reserved = soup[0]
 		self.target = soup[1]
-		
-		"""
-		self.src = bytes(soup[2], "raw_unicode_escape")
-		self.dst = bytes(soup[3], "raw_unicode_escape")     
-		"""
 		
 		self.src = bytes(soup[2], "raw_unicode_escape")
 		self.dst = bytes(soup[3], "raw_unicode_escape")     
