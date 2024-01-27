@@ -268,9 +268,9 @@ Usage:
 		return "Success"
 		
 	def copy_orig(self, force_overwrite = False, suffix = ".orig"):
-		src = self.full_fname
-		dst = self.full_fname.with_suffix(suffix)
-		
+		src = Path(self.full_fname)
+		dst = src.with_suffix(suffix)
+
 		if(not os.path.exists(dst) or force_overwrite):
 			copyfile(src, dst)
 			return dst
