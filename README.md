@@ -3,6 +3,8 @@ Patches for desktop libraries and apps. Public set.
 
 Ikejime is inspired by [Japanese ikejime technique](https://en.wikipedia.org/wiki/Ikejime).
 
+For pre-patched .exe and other files, see: [/releases](./releases)  
+
 ## Honorable mention
 
 * [p-K10stat_anyCPUpatch.py](./p-K10stat_anyCPUpatch.py) -> [K10STAT154-patched](https://github.com/TAbdiukov/Ikejime/releases/tag/K10STAT154-patched).
