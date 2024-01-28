@@ -3,7 +3,7 @@ Patches for desktop libraries and apps. Public set.
 
 Ikejime is inspired by [Japanese ikejime technique](https://en.wikipedia.org/wiki/Ikejime).
 
-For pre-patched .exe and other files, see: [/releases](./releases)  
+Discover pre-patched .exe and other binaries at: [/releases](https://github.com/TAbdiukov/Ikejime/releases)  
 
 ## Honorable mention
 
