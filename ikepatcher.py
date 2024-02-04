@@ -234,7 +234,8 @@ Usage:
 		
 	def do_patch(self):   
 		if(self.flag_samelen):
-			assert((len(self.src) / len(self.dst)) in [1,4])
+			src_nominal = self.src.replace(b'\x5C\x78', b'')
+			assert (len(self.src) == len(self.dst)) or ((len(src_nominal)/2) == len(self.dst))
 
 		# valid patch chk
 		assert(len(str(self.src)) > 0)
