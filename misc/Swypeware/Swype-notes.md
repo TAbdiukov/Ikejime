@@ -39,45 +39,6 @@ NOPs for jumping to limitation logic
 90 90 90 90 90 90 90 90 90 90
 ```
 
-## No DX10 - v2
-
-Disables call to DX10 logic.
-
-### Location
-
-```
-Procedure: 004173E0
-Important: 004174E2
-```
-
-### Syntax
-
-<distant JNE><call-1><short JGE><call-2>
-
-### Bytes
-
-```
-0F 85 84 00 00 00 53 33 FF E8 F0 06 00 00 85 C0
-7D 11 53 BF 05 00 00 00 E8 E1 06 00 00
-```
-
-### Bytes (more liberal)
-
-
-```
-0F 85 84 00 00 00 53 33 FF E8 F0 06 00 00 85 C0
-XX XX 53 BF 05 00 00 00 E8 E1 06 00 00
-```
-
-### Change
-
-Several first bytes (more specifically, 3 first bytes) were changed for unconditional `JMP`.
-
-```
-E9 85 00 00 00 00 53 33 FF E8 F0 06 00 00 85 C0
-7D 11 53 BF 05 00 00 00 E8 E1 06 00 00
-```
-
 # DX10 is slow - mitigate
 
 ## No DX10 - v1
@@ -116,4 +77,43 @@ First 4 bytes are changed (`retn 4`, `nop`. `nop` for compatibility with next in
 
 ```
 C2 04 00 90 8B 8E B4 9D 4A 00 8D 44 24 04 ...
+```
+
+## No DX10 - v2
+
+Disables call to DX10 logic.
+
+### Location
+
+```
+Procedure: 004173E0
+Important: 004174E2
+```
+
+### Syntax
+
+<distant JNE><call-1><short JGE><call-2>
+
+### Bytes
+
+```
+0F 85 84 00 00 00 53 33 FF E8 F0 06 00 00 85 C0
+7D 11 53 BF 05 00 00 00 E8 E1 06 00 00
+```
+
+### Bytes (more liberal)
+
+
+```
+0F 85 84 00 00 00 53 33 FF E8 F0 06 00 00 85 C0
+XX XX 53 BF 05 00 00 00 E8 E1 06 00 00
+```
+
+### Change
+
+Several first bytes (more specifically, 3 first bytes) were changed for unconditional `JMP`.
+
+```
+E9 85 00 00 00 00 53 33 FF E8 F0 06 00 00 85 C0
+7D 11 53 BF 05 00 00 00 E8 E1 06 00 00
 ```
