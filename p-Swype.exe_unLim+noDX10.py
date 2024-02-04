@@ -1,6 +1,7 @@
 from ikepatcher import *
 
 AUTHOR = "TAbdiukov"
+DEPRECATED_FUNCTIONALITY = False
 """
 Tested on: Samsung Swype Windows 7 Keyboard (BASW-13533A23.ZIP)
 """
@@ -32,10 +33,16 @@ if __name__ == '__main__':
         patch_unlim = Patcher(Cook(patch_unlim_old, patch_unlim_new, "Swype.exe", "1"))
         patch_noDX10_v1 = Patcher(Cook(patch_noDX10_v1_old, patch_noDX10_v1_new, "Swype.exe", "0"))
         patch_noDX10_v2 = Patcher(Cook(patch_noDX10_v2_old, patch_noDX10_v2_new, "Swype.exe", "0"))
-        
+
         queue = Commits()
-        
+
         queue.commit(patch_unlim)
+
+        if(DEPRECATED_FUNCTIONALITY):
+            if(Misc.yes_or_no("Disable DX10 [v1]? (faster, may cause glitches)")): 
+                queue.commit(patch_noDX10_v1)
+
+
         if(Misc.yes_or_no("Disable DX10 [v2]? (faster, may cause glitches)")): 
             queue.commit(patch_noDX10_v2)
         
