@@ -7,6 +7,12 @@ There are 2 releases of Swype for Windows 7
 
 # No "limited functionality in beta version"
 
+### Links
+
+* [Samsung release of Swype Windows 7 Keyboard](http://orcaservice.samsungmobile.com/ITEM/Software/BASW-13533A/BASW-13533A23.ZIP) / [IA](https://archive.org/details/BASW-13533A23.ZIP)
+* [HP release of Swype Windows 7 Keyboard](https://ftp.hp.com/pub/softpaq/sp55501-56000/sp55539.exe) / [IA](https://archive.org/details/sp55539)
+
+
 ## Unlimited
 
 ### Location
