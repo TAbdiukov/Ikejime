@@ -1,6 +1,10 @@
 from ikepatcher import *
 
 AUTHOR = "TAbdiukov"
+"""
+Tested on: Samsung Swype Windows 7 Keyboard (BASW-13533A23.ZIP)
+"""
+
 
 if __name__ == '__main__':
 
@@ -32,7 +36,7 @@ if __name__ == '__main__':
         queue = Commits()
         
         queue.commit(patch_unlim)
-        if(Misc.yes_or_no("Disable DX10 [v2]? (faster, may cause glitches)")) 
+        if(Misc.yes_or_no("Disable DX10 [v2]? (faster, may cause glitches)")): 
             queue.commit(patch_noDX10_v2)
         
         print("Pushing..")
