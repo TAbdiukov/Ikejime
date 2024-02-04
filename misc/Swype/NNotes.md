@@ -1,3 +1,10 @@
+# Trivia
+
+There are 2 releases of Swype for Windows 7
+
+* HP release for HP Slate 2
+* Samsung release for SAMSUNG Series 7 Slate
+
 # No "limited functionality in beta version"
 
 ## Unlimited

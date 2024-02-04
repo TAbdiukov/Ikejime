@@ -3,6 +3,11 @@ from ikepatcher import *
 AUTHOR = "TAbdiukov"
 
 if __name__ == '__main__':
+
+    print("Discover more about patch, ")
+    print("https://github.com/TAbdiukov/Ikejime/blob/main/misc/Swype/Notes.md")
+    print("https://github.com/TAbdiukov/Ikejime/tree/main/misc/Swype")
+
     disclaimer = "By using this patch, you agree you accept the risk pertinent to this patch and patched software. Agree? "
     resp = Misc.yes_or_no(disclaimer)
     if(resp == False):
