@@ -234,8 +234,8 @@ Usage:
 		
 	def do_patch(self):   
 		if(self.flag_samelen):
-			if not ((len(self.src) / len(self.dst)) in [1,4]):
-				assert(0)
+			assert((len(self.src) / len(self.dst)) in [1,4])
+
 		# valid patch chk
 		assert(len(str(self.src)) > 0)
 	
