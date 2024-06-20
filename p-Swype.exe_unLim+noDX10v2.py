@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
         queue.commit(patch_unlim)
 
-        if(Misc.yes_or_no("Disable DX10 [v2]? (faster, may cause glitches)")): 
+        if(Misc.yes_or_no("Disable DX10 [v2]?")): 
             queue.commit(patch_noDX10_v2)
         
         print("Pushing..")
