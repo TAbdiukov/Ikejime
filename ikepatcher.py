@@ -16,7 +16,7 @@ try:
 except ModuleNotFoundError:
 	print("Please install prerequisite,")
 	print("```")
-	print("pip install pyperclip")
+	print("pip install simpleeval")
 	print("```")
 	exit()
 
