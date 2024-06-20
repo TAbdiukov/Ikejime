@@ -2,6 +2,7 @@ from ikepatcher import *
 
 AUTHOR = "TAbdiukov"
 DEPRECATED_FUNCTIONALITY = True
+VERSION = 1
 """
 Tested on: Samsung Swype Windows 7 Keyboard (BASW-13533A23.ZIP)
 """

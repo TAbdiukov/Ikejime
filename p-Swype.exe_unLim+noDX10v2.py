@@ -1,6 +1,7 @@
 from ikepatcher import *
 
 AUTHOR = "TAbdiukov"
+VERSION = 2
 """
 Tested on: Samsung Swype Windows 7 Keyboard (BASW-13533A23.ZIP)
 """
