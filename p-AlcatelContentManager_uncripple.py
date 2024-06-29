@@ -8,7 +8,8 @@ if __name__ == '__main__':
 
 	# Nopping the bad jump
 
-	old = "(\\xFF\\x50\\x10)(\\x3C\\x01)(\\x0F\\x85\\xC9\\x05\\x00\\x00)"
+	old = ikepatcher.InHEX.src("(FF 50 10)(3C 01)(0F 85 C9 05 00 00)")
+
 	# see https://stackoverflow.com/q/5984633
 	new = "\g<1>\g<2>\x90\x90\x90\x90\x90\x90"
 
