@@ -363,19 +363,20 @@ Usage:
 			logger.info("="*width)
 
 
-# Crossbreed between WinHex and ImHex
+# The name is a,
+# crossbreed between WinHex and ImHex
 class InHEX:
 	@staticmethod
 	def generic_transform_hex_string(hex_string, questionmarks_func, byte_replace_func):
 		# Remove spaces
 		hex_string = hex_string.replace(" ", "")
-		
+
 		# Replace "??" with "." (re match any character)
 		hex_string = hex_string.replace("??", questionmarks_func())
-		
+
 		# Find all HEX values and transform them
 		hex_string = re.sub(r'[0-9A-Fa-f]{2}', byte_replace_func, hex_string)
-		
+
 		return hex_string
 
 	@staticmethod
@@ -384,8 +385,8 @@ class InHEX:
 
 	@staticmethod
 	def questionmarks_func_dst():
-		raise ValueError("Regex does not support blind questionmarks")
-	
+		raise ValueError("Regex DST does not support blind questionmarks. Use groups in (brackets) in SRC and g<n> in DST")
+
 	@staticmethod
 	def byte_replace_func_src(match):
 		hex_value = match.group(0)
@@ -395,18 +396,16 @@ class InHEX:
 	def byte_replace_func_dst(match):
 		hex_value = match.group(0)
 		return chr(int(hex_value, 16))
-	
-	# Transform type 1
+
 	@staticmethod
-	def transform_type_source(hex_string): 
+	def transform_type_source(hex_string):
 		return InHEX.generic_transform_hex_string(hex_string, InHEX.questionmarks_func_src, InHEX.byte_replace_func_src)
-	
-	# Transform type 2
+
 	@staticmethod
-	def transform_type_destination(hex_string): 
+	def transform_type_destination(hex_string):
 		return InHEX.generic_transform_hex_string(hex_string, InHEX.questionmarks_func_dst, InHEX.byte_replace_func_dst)
-	
-	# Output for Type Source: String of Python-compliant byte representations. Useful for Regex "Find/Source" parameters
+
+	# Output for Type Source: String of Python-compliant byte representations. Useful for Regex "Find/Source" parameter
 	# Output for Type Destination: Raw bytes. Useful for Regex "Replace/Destination" parameter
 	src = transform_type_source
 	dst = transform_type_destination
