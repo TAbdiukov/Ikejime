@@ -372,7 +372,7 @@ class InHEX:
 		hex_string = hex_string.replace(" ", "")
 
 		# Replace "??" with "." (re match any character)
-		hex_string = hex_string.replace("??", questionmarks_func())
+		hex_string = re.sub(r'\?\?', questionmarks_func, hex_string)
 
 		# Find all HEX values and transform them
 		hex_string = re.sub(r'[0-9A-Fa-f]{2}', byte_replace_func, hex_string)
