@@ -96,7 +96,7 @@ class Commits:
 # crossbreed between WinHex and ImHex
 class InHEX:
 	@staticmethod
-	def _generic_transform_hex_string(hex_string, questionmarks_func, byte_replace_func):	
+	def _generic_transform_hex_string(hex_string, questionmarks_func, byte_replace_func):
 		# Remove spaces
 		hex_string = hex_string.replace(" ", "")
 

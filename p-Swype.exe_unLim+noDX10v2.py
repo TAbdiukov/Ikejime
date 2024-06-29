@@ -19,7 +19,7 @@ if __name__ == '__main__':
         print("Exiting..")
     elif(resp == True):
         print("Loading data")
-                
+
         patch_unlim_old = InHEX.src("80 BE 24 52 00 00 00 0F 85 EE 0C 00 00 80 BE 26 52 00 00 00 0F 85 E1 0C 00 00")
         patch_unlim_new = InHEX.dst("90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90")
 
@@ -34,11 +34,11 @@ if __name__ == '__main__':
 
         queue.commit(patch_unlim)
 
-        if(Misc.yes_or_no("Disable DX10 [v2]?")): 
+        if(Misc.yes_or_no("Disable DX10 [v2]?")):
             queue.commit(patch_noDX10_v2)
-        
+
         print("Pushing..")
-        
+
         queue.push()
 
         print("Done.")

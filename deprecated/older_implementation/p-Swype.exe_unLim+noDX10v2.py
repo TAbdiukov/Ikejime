@@ -19,7 +19,7 @@ if __name__ == '__main__':
         print("Exiting..")
     elif(resp == True):
         print("Loading data")
-                
+
         patch_unlim_old = "\\x80\\xBE\\x24\\x52\\x00\\x00\\x00\\x0F\\x85\\xEE\\x0C\\x00\\x00\\x80\\xBE\\x26\\x52\\x00\\x00\\x00\\x0F\\x85\\xE1\\x0C\\x00\\x00"
         patch_unlim_new = "\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90\x90"
 
@@ -34,11 +34,11 @@ if __name__ == '__main__':
 
         queue.commit(patch_unlim)
 
-        if(Misc.yes_or_no("Disable DX10 [v2]?")): 
+        if(Misc.yes_or_no("Disable DX10 [v2]?")):
             queue.commit(patch_noDX10_v2)
-        
+
         print("Pushing..")
-        
+
         queue.push()
 
         print("Done.")
