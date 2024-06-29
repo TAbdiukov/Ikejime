@@ -67,23 +67,23 @@ if __name__ == '__main__':
     elif(resp == True):
         print("Loading data")
 
-        patch_1_1_old = "\\x85\\xC0\\x75\\x0A\\x68\\xDA\\x07\\x00\\x00\\xE9\\x68\\x02\\x00\\x00"
-        patch_1_2_old = "\\x85\\xC0\\x75\\x0A\\x68\\xD3\\x07\\x00\\x00\\xE9\\xD4\\x00\\x00\\x00"
-        patch_1_3_old = "\\x85\\xC0\\x75\\x0A\\x68\\xD5\\x07\\x00\\x00\\xE9\\x8E\\x00\\x00\\x00"
+        patch_1_1_old = InHEX.src("85 C0 75 0A 68 DA 07 00 00 E9 68 02 00 00")
+        patch_1_2_old = InHEX.src("85 C0 75 0A 68 D3 07 00 00 E9 D4 00 00 00")
+        patch_1_3_old = InHEX.src("85 C0 75 0A 68 D5 07 00 00 E9 8E 00 00 00")
 
-        patch_2_old = "\\x81\\x7C\\x24\\x3C\\x41\\x75\\x74\\x68\\x0F\\x85\\x09\\x02\\x00\\x00\\x81\\x7C\\x24\\x08\\x63\\x41\\x4D\\x44\\x0F\\x85\\xFB\\x01\\x00\\x00\\x81\\x7C\\x24\\x44\\x65\\x6E\\x74\\x69\\x0F\\x85\\xED\\x01\\x00\\x00"
+        patch_2_old = InHEX.src("81 7C 24 3C 41 75 74 68 0F 85 09 02 00 00 81 7C 24 08 63 41 4D 44 0F 85 FB 01 00 00 81 7C 24 44 65 6E 74 69 0F 85 ED 01 00 00")
 
-        patch_3_1_old = "\\x74\\x1B\\x3D\\x00\\x0F\\x20\\x00\\x0F\\x85\\x8F\\x01\\x00\\x00\\x0F\\xB6\\xC1\\x0D\\x00\\x11\\x00\\x00"
-        patch_3_2_old = "\\x3D\\x00\\x0F\\x50\\x00\\x0F\\x85\\x42\\x01\\x00\\x00\\xF7\\xC1\\x00\\x00\\x0F\\x00\\x0F\\x85\\x36\\x01\\x00\\x00\\x0F\\xB6\\xC1\\x0D\\x00\\x14\\x00\\x00"
+        patch_3_1_old = InHEX.src("74 1B 3D 00 0F 20 00 0F 85 8F 01 00 00 0F B6 C1 0D 00 11 00 00")
+        patch_3_2_old = InHEX.src("3D 00 0F 50 00 0F 85 42 01 00 00 F7 C1 00 00 0F 00 0F 85 36 01 00 00 0F B6 C1 0D 00 14 00 00")
 
-        patch_1_1_new = "\x85\xC0\xEB\x0A\x68\xDA\x07\x00\x00\xE9\x68\x02\x00\x00"
-        patch_1_2_new = "\x85\xC0\xEB\x0A\x68\xD3\x07\x00\x00\xE9\xD4\x00\x00\x00"
-        patch_1_3_new = "\x85\xC0\xEB\x0A\x68\xD5\x07\x00\x00\xE9\x8E\x00\x00\x00"
+        patch_1_1_new = InHEX.dst("85 C0 EB 0A 68 DA 07 00 00 E9 68 02 00 00")
+        patch_1_2_new = InHEX.dst("85 C0 EB 0A 68 D3 07 00 00 E9 D4 00 00 00")
+        patch_1_3_new = InHEX.dst("85 C0 EB 0A 68 D5 07 00 00 E9 8E 00 00 00")
 
-        patch_2_new = "\x81\x7C\x24\x3C\x41\x75\x74\x68\x90\x90\x90\x90\x90\x90\x81\x7C\x24\x08\x63\x41\x4D\x44\x90\x90\x90\x90\x90\x90\x81\x7C\x24\x44\x65\x6E\x74\x69\x90\x90\x90\x90\x90\x90"
+        patch_2_new = InHEX.dst("81 7C 24 3C 41 75 74 68 90 90 90 90 90 90 81 7C 24 08 63 41 4D 44 90 90 90 90 90 90 81 7C 24 44 65 6E 74 69 90 90 90 90 90 90")
 
-        patch_3_1_new = "\x74\x1B\x3D\x00\x0F\x20\x00\x90\x90\x90\x90\x90\x90\x0F\xB6\xC1\x0D\x00\x11\x00\x00"
-        patch_3_2_new = "\x3D\x00\x0F\x50\x00\x90\x90\x90\x90\x90\x90\xF7\xC1\x00\x00\x0F\x00\x90\x90\x90\x90\x90\x90\x0F\xB6\xC1\x0D\x00\x14\x00\x00"
+        patch_3_1_new = InHEX.dst("74 1B 3D 00 0F 20 00 90 90 90 90 90 90 0F B6 C1 0D 00 11 00 00")
+        patch_3_2_new = InHEX.dst("3D 00 0F 50 00 90 90 90 90 90 90 F7 C1 00 00 0F 00 90 90 90 90 90 90 0F B6 C1 0D 00 14 00 00")
 
         queue = Commits()
 
