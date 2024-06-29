@@ -32,6 +32,7 @@ logging.basicConfig()
 if(VERBOSE):
 	logger.setLevel(logging.DEBUG)
 
+
 class Cook:
 	DEF_PREFIX = 'PTCH101'
 	FILE = 'default_binfile.exe'
@@ -76,6 +77,7 @@ class Cook:
 	def __str__(self):
 		return self.cookBasic()
 
+
 class Commits:
 	def __init__(self):
 		self.commits = []
@@ -88,6 +90,7 @@ class Commits:
 	def push(self):
 		for commit in self.commits:
 			commit.payload()
+
 
 # The name is a,
 # crossbreed between WinHex and ImHex
@@ -135,6 +138,7 @@ class InHEX:
 	# Output for Type Destination: Raw bytes. Useful for Regex "Replace/Destination" parameter
 	src = transform_type_source
 	dst = transform_type_destination
+
 
 class Misc:
 	def __init__(self):
@@ -406,6 +410,7 @@ Usage:
 					time.sleep(delay)
 
 			logger.info("="*width)
+
 
 if __name__ == '__main__':
 	obj = Patcher(argv = sys.argv)
