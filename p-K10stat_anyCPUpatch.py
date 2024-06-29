@@ -68,21 +68,22 @@ if __name__ == '__main__':
         print("Loading data")
 
         patch_1_1_old = InHEX.src("85 C0 75 0A 68 DA 07 00 00 E9 68 02 00 00")
-        patch_1_2_old = InHEX.src("85 C0 75 0A 68 D3 07 00 00 E9 D4 00 00 00")
-        patch_1_3_old = InHEX.src("85 C0 75 0A 68 D5 07 00 00 E9 8E 00 00 00")
-
-        patch_2_old = InHEX.src("81 7C 24 3C 41 75 74 68 0F 85 09 02 00 00 81 7C 24 08 63 41 4D 44 0F 85 FB 01 00 00 81 7C 24 44 65 6E 74 69 0F 85 ED 01 00 00")
-
-        patch_3_1_old = InHEX.src("74 1B 3D 00 0F 20 00 0F 85 8F 01 00 00 0F B6 C1 0D 00 11 00 00")
-        patch_3_2_old = InHEX.src("3D 00 0F 50 00 0F 85 42 01 00 00 F7 C1 00 00 0F 00 0F 85 36 01 00 00 0F B6 C1 0D 00 14 00 00")
-
         patch_1_1_new = InHEX.dst("85 C0 EB 0A 68 DA 07 00 00 E9 68 02 00 00")
+
+        patch_1_2_old = InHEX.src("85 C0 75 0A 68 D3 07 00 00 E9 D4 00 00 00")
         patch_1_2_new = InHEX.dst("85 C0 EB 0A 68 D3 07 00 00 E9 D4 00 00 00")
+
+        patch_1_3_old = InHEX.src("85 C0 75 0A 68 D5 07 00 00 E9 8E 00 00 00")
         patch_1_3_new = InHEX.dst("85 C0 EB 0A 68 D5 07 00 00 E9 8E 00 00 00")
 
+
+        patch_2_old = InHEX.src("81 7C 24 3C 41 75 74 68 0F 85 09 02 00 00 81 7C 24 08 63 41 4D 44 0F 85 FB 01 00 00 81 7C 24 44 65 6E 74 69 0F 85 ED 01 00 00")
         patch_2_new = InHEX.dst("81 7C 24 3C 41 75 74 68 90 90 90 90 90 90 81 7C 24 08 63 41 4D 44 90 90 90 90 90 90 81 7C 24 44 65 6E 74 69 90 90 90 90 90 90")
 
+        patch_3_1_old = InHEX.src("74 1B 3D 00 0F 20 00 0F 85 8F 01 00 00 0F B6 C1 0D 00 11 00 00")
         patch_3_1_new = InHEX.dst("74 1B 3D 00 0F 20 00 90 90 90 90 90 90 0F B6 C1 0D 00 11 00 00")
+
+        patch_3_2_old = InHEX.src("3D 00 0F 50 00 0F 85 42 01 00 00 F7 C1 00 00 0F 00 0F 85 36 01 00 00 0F B6 C1 0D 00 14 00 00")
         patch_3_2_new = InHEX.dst("3D 00 0F 50 00 90 90 90 90 90 90 F7 C1 00 00 0F 00 90 90 90 90 90 90 0F B6 C1 0D 00 14 00 00")
 
         queue = Commits()
