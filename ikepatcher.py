@@ -2,9 +2,11 @@
 import re
 # file checks
 from pathlib import Path
+# For handling FileNotFoundError properly
+import errno
 # for args
 import sys
-# for backups
+# for backups (and FileNotFoundError for os)
 import os
 from shutil import copyfile
 # for quick hash
@@ -30,7 +32,7 @@ VERBOSE = True
 logger = logging.getLogger()
 logging.basicConfig()
 if(VERBOSE):
-	logger.setLevel(logging.DEBUG)
+	logger.setLevel(logging.INFO)
 
 
 class Cook:
@@ -247,11 +249,11 @@ Usage:
 	def find_target(self):
 		std_full_fname = self.target
 		guess = self.guess
-		#logger.info("Main guess: "+str(guess))
+		#logger.debug("Main guess: "+str(guess))
 		# Try guess first
 		if(len(guess)):
 			path_guess = Path(guess)
-			logger.info("Guess 2: "+str(guess))
+			logger.debug("Guess 2: "+str(guess))
 			if(path_guess.is_file()):
 				self.full_fname = Path(guess)
 				return ;
@@ -264,14 +266,14 @@ Usage:
 
 		# then try in local dir
 		path_local = Path(Path.cwd(), Path(std_full_fname))
-		logger.info("Guess 3: "+str(path_local))
+		logger.debug("Guess 3: "+str(path_local))
 
 		if(path_local.is_file()):
 			self.full_fname = std_full_fname
 			return ;
 		else:
-			logger.info("Target file not found")
-			assert(0)
+			raise FileNotFoundError(
+				errno.ENOENT, "Target file not found", std_full_fname)
 
 	@staticmethod
 	def hash_pretty(k):
