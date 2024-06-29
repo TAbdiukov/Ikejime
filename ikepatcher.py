@@ -32,8 +32,6 @@ logging.basicConfig()
 if(VERBOSE):
 	logger.setLevel(logging.DEBUG)
 
-
-
 class Cook:
 	DEF_PREFIX = 'PTCH101'
 	FILE = 'default_binfile.exe'
@@ -90,6 +88,53 @@ class Commits:
 	def push(self):
 		for commit in self.commits:
 			commit.payload()
+
+# The name is a,
+# crossbreed between WinHex and ImHex
+class InHEX:
+	@staticmethod
+	def _generic_transform_hex_string(hex_string, questionmarks_func, byte_replace_func):	
+		# Remove spaces
+		hex_string = hex_string.replace(" ", "")
+
+		# Replace "??" with "." (re match any character)
+		hex_string = re.sub(r'\?\?', questionmarks_func, hex_string)
+
+		# Find all HEX values and transform them
+		hex_string = re.sub(r'[0-9A-Fa-f]{2}', byte_replace_func, hex_string)
+
+		return hex_string
+
+	@staticmethod
+	def questionmarks_func_src():
+		return "."
+
+	@staticmethod
+	def questionmarks_func_dst():
+		raise ValueError("Regex DST does not support blind questionmarks. Use groups in (brackets) in SRC and g<n> in DST")
+
+	@staticmethod
+	def byte_replace_func_src(match):
+		hex_value = match.group(0)
+		return "\\x" + hex_value
+
+	@staticmethod
+	def byte_replace_func_dst(match):
+		hex_value = match.group(0)
+		return chr(int(hex_value, 16))
+
+	@staticmethod
+	def transform_type_source(hex_string):
+		return InHEX._generic_transform_hex_string(hex_string, InHEX.questionmarks_func_src, InHEX.byte_replace_func_src)
+
+	@staticmethod
+	def transform_type_destination(hex_string):
+		return InHEX._generic_transform_hex_string(hex_string, InHEX.questionmarks_func_dst, InHEX.byte_replace_func_dst)
+
+	# Output for Type Source: String of Python-compliant byte representations. Useful for Regex "Find/Source" parameter
+	# Output for Type Destination: Raw bytes. Useful for Regex "Replace/Destination" parameter
+	src = transform_type_source
+	dst = transform_type_destination
 
 class Misc:
 	def __init__(self):
@@ -361,56 +406,6 @@ Usage:
 					time.sleep(delay)
 
 			logger.info("="*width)
-
-
-# The name is a,
-# crossbreed between WinHex and ImHex
-class InHEX:
-	@staticmethod
-	def _generic_transform_hex_string(hex_string, questionmarks_func, byte_replace_func):
-		# Remove spaces
-		hex_string = hex_string.replace(" ", "")
-
-		# Replace "??" with "." (re match any character)
-		hex_string = re.sub(r'\?\?', questionmarks_func, hex_string)
-
-		# Find all HEX values and transform them
-		hex_string = re.sub(r'[0-9A-Fa-f]{2}', byte_replace_func, hex_string)
-
-		return hex_string
-
-	@staticmethod
-	def questionmarks_func_src():
-		return "."
-
-	@staticmethod
-	def questionmarks_func_dst():
-		raise ValueError("Regex DST does not support blind questionmarks. Use groups in (brackets) in SRC and g<n> in DST")
-
-	@staticmethod
-	def byte_replace_func_src(match):
-		hex_value = match.group(0)
-		return "\\x" + hex_value
-
-	@staticmethod
-	def byte_replace_func_dst(match):
-		hex_value = match.group(0)
-		return chr(int(hex_value, 16))
-
-	@staticmethod
-	def transform_type_source(hex_string):
-		return InHEX._generic_transform_hex_string(hex_string, InHEX.questionmarks_func_src, InHEX.byte_replace_func_src)
-
-	@staticmethod
-	def transform_type_destination(hex_string):
-		return InHEX._generic_transform_hex_string(hex_string, InHEX.questionmarks_func_dst, InHEX.byte_replace_func_dst)
-
-	# Output for Type Source: String of Python-compliant byte representations. Useful for Regex "Find/Source" parameter
-	# Output for Type Destination: Raw bytes. Useful for Regex "Replace/Destination" parameter
-	src = transform_type_source
-	dst = transform_type_destination
-
-
 
 if __name__ == '__main__':
 	obj = Patcher(argv = sys.argv)
