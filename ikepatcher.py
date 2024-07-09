@@ -1,4 +1,4 @@
-#!python3
+#!/usr/bin/env python3
 import re
 # file checks
 from pathlib import Path
