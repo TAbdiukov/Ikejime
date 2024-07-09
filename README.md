@@ -7,7 +7,7 @@ Discover pre-patched .exe and other binaries at: [/releases](https://github.com/
 
 ## Honorable mention
 
-* [p-K10stat_anyCPUpatch.py](./p-K10stat_anyCPUpatch.py) -> [K10STAT154-patched](https://github.com/TAbdiukov/Ikejime/releases/tag/K10STAT154-patched).
+* [p-K10stat_anyCPUpatch.py](./p-K10stat_anyCPUpatch.py) → [K10STAT154-patched](https://github.com/TAbdiukov/Ikejime/releases/tag/K10STAT154-patched).
 
 ## See also
 *Tweaking and patching,*  
