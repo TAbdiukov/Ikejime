@@ -12,7 +12,7 @@ Discover pre-patched .exe and other binaries at: [/releases](https://github.com/
 ## See also
 *Tweaking and patching,*  
 
-* [TAbdiukov/PPSSPP-patches](https://github.com/TAbdiukov/PPSSPP-patches) – My cheats, fixes, and workarounds for PPSSPP games and apps.
+* [TAbdiukov/PPSSPP-patches](https://github.com/TAbdiukov/PPSSPP-patches) – My romhacks, fixes, and workarounds for PPSSPP games and apps.
 * **<ins>TAbdiukov/Ikejime</ins>** – Patches for desktop libraries and apps.
 * [TAbdiukov/Ikejime-Private](https://github.com/TAbdiukov/Ikejime-Private) – <ins>Private</ins> patches.
 * [TAbdiukov/WinRegistry](https://github.com/TAbdiukov/WinRegistry) – Windows Registry tweaks.
