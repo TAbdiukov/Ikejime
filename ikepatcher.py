@@ -224,14 +224,13 @@ Usage:
 
 				return True
 
-		if(txt_input is not None):
+		if txt_input:
 			return True
 		# data entered through side channels
 		elif(self.is_target_acquired()):
 			return True
 
 		return False
-
 
 	# technical
 	@property
@@ -281,9 +280,8 @@ Usage:
 	def hash_pretty(k):
 		return (hex(k).split("x")[-1].upper())
 
-	def is_target_acquired(self):
-		# self.dst not needed
-		return ((len(self.full_fname) > 0) and (len(self.src) > 0))
+    def is_target_acquired(self) -> bool:
+        return self.full_fname is not None and isinstance(self.src, (bytes, bytearray)) and len(self.src) > 0
 
 	def help_fillin(self):
 		return self.HELP.format(self.tool_name, self.target)
