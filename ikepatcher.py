@@ -74,8 +74,12 @@ class Cook:
 		patch.reserved, patch.target = soup[0], soup[1]
 
 		try:
-			patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
+			"""
+            patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
 			patch.dst = ast.literal_eval(soup[3])
+            """
+            patch.src = bytes(soup[2], "raw_unicode_escape")
+            patch.dst = bytes(soup[3], "raw_unicode_escape")
 		except (ValueError, SyntaxError) as e:
 			raise ValueError("SRC/DST must be Python bytes literals, e.g., b'\\x90\\x90'") from e
 
@@ -348,6 +352,7 @@ Usage:
 		logger.info("="*width)
 		if(not valid):
 			logger.info(self.show_internal_help())
+            return
 		else:
 			Cook.uncook_basic(self)
 			logger.info("Patch tgt: "+str(self.target))
@@ -376,12 +381,13 @@ Usage:
 
 			logger.info("="*width)
 
-	def payload_continuous(self, do_backup = False, force_overwrite = False, width = 40, delay=0.5):
+	def payload_continuous(self, do_backup=False, force_overwrite=False, width=40, delay=0.5, max_attempts=120)
 		valid = self.interpret_input()
 
 		logger.info("="*width)
 		if(not valid):
 			logger.info(self.show_internal_help())
+            return
 		else:
 			Cook.uncook_basic(self)
 			logger.info("CONTINUOUS MODE")
@@ -396,6 +402,8 @@ Usage:
 			if(do_backup):
 				buf = self.copy_orig(force_overwrite)
 				logger.info("Backup saved to: "+str(buf))
+                
+
 			patch_result = self.do_patch()
 
 			logger.info("* Matches: "+str(self.cnt))
