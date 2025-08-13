@@ -184,7 +184,7 @@ Usage:
 		self.dst = None
 
 		# stream
-		self.full_fname = None
+		self.absolute_canonical_path = None
 		self._cnt = 0
 
 		self.hash_old = None
@@ -248,7 +248,7 @@ Usage:
 		self.cnt = 0
 
 	def find_target(self):
-		std_full_fname = self.target
+		std_absolute_canonical_path = self.target
 		guess = self.guess
 		#logger.debug("Main guess: "+str(guess))
 		# Try guess first
@@ -256,32 +256,32 @@ Usage:
 			path_guess = Path(guess)
 			logger.debug("Guess 2: "+str(guess))
 			if(path_guess.is_file()):
-				self.full_fname = Path(guess)
+				self.absolute_canonical_path = Path(guess)
 				return ;
 			elif(path_guess.is_dir()):
-				guess_new = Path(str(guess), std_full_fname)
+				guess_new = Path(str(guess), std_absolute_canonical_path)
 				path_guess_new = Path(guess_new)
 				if(path_guess_new.is_file()):
-					self.full_fname = guess_new
+					self.absolute_canonical_path = guess_new
 					return ;
 
 		# then try in local dir
-		path_local = Path(Path.cwd(), Path(std_full_fname))
+		path_local = Path(Path.cwd(), Path(std_absolute_canonical_path))
 		logger.debug("Guess 3: "+str(path_local))
 
 		if(path_local.is_file()):
-			self.full_fname = std_full_fname
+			self.absolute_canonical_path = std_absolute_canonical_path
 			return ;
 		else:
 			raise FileNotFoundError(
-				errno.ENOENT, "Target file not found", std_full_fname)
+				errno.ENOENT, "Target file not found", std_absolute_canonical_path)
 
 	@staticmethod
 	def hash_pretty(k):
 		return (hex(k).split("x")[-1].upper())
 
 	def is_target_acquired(self) -> bool:
-		return self.full_fname is not None and isinstance(self.src, (bytes, bytearray)) and len(self.src) > 0
+		return self.absolute_canonical_path is not None and isinstance(self.src, (bytes, bytearray)) and len(self.src) > 0
 
 	def help_fillin(self):
 		return self.HELP.format(self.tool_name, self.target)
@@ -300,9 +300,9 @@ Usage:
 		# valid patch chk
 		assert(len(str(self.src)) > 0)
 
-		fp = open(self.full_fname, "rb")
+		fp = open(self.absolute_canonical_path, "rb")
 		binary = fp.read()
-		self.hash_old = zlib.adler32(binary)
+		self.hash_old = zlib.adler32(binary) & 0xFFFFFFFF
 		fp.close()
 		assert(len(binary))
 
@@ -313,11 +313,11 @@ Usage:
 		self.cnt = -1
 		patched,self.cnt = re.subn(src_compiled, repl=self.dst, string=binary)
 
-		self.hash_new = zlib.adler32(patched)
+		self.hash_new = zlib.adler32(patched) & 0xFFFFFFFF
 
 		# save results
 		try:
-			fp = open(self.full_fname, "wb")
+			fp = open(self.absolute_canonical_path, "wb")
 			fp.write(patched)
 			fp.close()
 		except PermissionError:
@@ -329,7 +329,7 @@ Usage:
 		return "Success"
 
 	def copy_orig(self, force_overwrite = False, suffix = ".orig"):
-		src = Path(self.full_fname)
+		src = Path(self.absolute_canonical_path)
 		dst = src.with_suffix(suffix)
 
 		if(not os.path.exists(dst) or force_overwrite):
@@ -353,7 +353,7 @@ Usage:
 
 			self.find_target()
 
-			assert(self.is_target_acquired)
+			assert(self.is_target_acquired())
 			if(do_backup):
 				buf = self.copy_orig(force_overwrite)
 				logger.info("Backup saved to: "+str(buf))
@@ -388,7 +388,7 @@ Usage:
 
 			self.find_target()
 
-			assert(self.is_target_acquired)
+			assert(self.is_target_acquired())
 			if(do_backup):
 				buf = self.copy_orig(force_overwrite)
 				logger.info("Backup saved to: "+str(buf))
