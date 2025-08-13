@@ -9,9 +9,9 @@ if __name__ == '__main__':
 	# Old: D864 2404 D9993C010000 EB0A C7813C01000000000000D9813C010000
 	# New: D864 2404 909090909090 EB0A C7813C01000000000000D9813C010000
 
-	old = "(\\xD8\\x64\\x24\\x04\\xD9\\x99\\x3C\\x01\\x00\\x00)(.{0,8}?)(\\xC7\\x81\\x3C\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\xD9\\x81\\x3C\\x01\\x00\\x00)"
+	old = r"(\\xD8\\x64\\x24\\x04\\xD9\\x99\\x3C\\x01\\x00\\x00)(.{0,8}?)(\\xC7\\x81\\x3C\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\xD9\\x81\\x3C\\x01\\x00\\x00)"
 	# see https://stackoverflow.com/q/5984633
-	new = "\xD8\x64\x24\x04\x90\x90\x90\x90\x90\x90\g<2>\g<3>"
+	new = r"\xD8\x64\x24\x04\x90\x90\x90\x90\x90\x90\g<2>\g<3>"
 
 	obj = ikepatcher.Patcher(ikepatcher.Cook(old, new, "TDR2000.exe", "0"))
 	obj.payload()
