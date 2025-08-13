@@ -319,7 +319,9 @@ Usage:
 	def do_patch(self):
 		if(self.flag_use_same_length):
 			src_nominal = self.src.replace(b'\x5C\x78', b'')
-			assert (len(self.src) == len(self.dst)) or ((len(src_nominal)/2) == len(self.dst))
+
+			if not ((len(self.src) == len(self.dst)) or ((len(src_nominal)/2) == len(self.dst))):
+				raise ValueError("SRC and DST lengths must match when same-length flag is set")
 
 		# valid patch chk
 		assert(len(str(self.src)) > 0)
@@ -328,10 +330,11 @@ Usage:
 		binary = fp.read()
 		self.hash_old = zlib.adler32(binary) & 0xFFFFFFFF
 		fp.close()
-		assert(len(binary))
+
+		if not binary:
+			raise RuntimeError("Target file is empty or unreadable")
 
 		self.clr_cnt()
-		#logger.info(self.src)
 		src_compiled = re.compile(self.src, flags = re.DOTALL)
 
 		self.cnt = -1
