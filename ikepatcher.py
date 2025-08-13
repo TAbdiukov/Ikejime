@@ -37,7 +37,7 @@ import time
 # creating the logger object
 VERBOSE = True
 logger = logging.getLogger()
-logging.basicConfig()
+logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 if(VERBOSE):
 	logger.setLevel(logging.INFO)
 
