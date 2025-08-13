@@ -75,12 +75,13 @@ class Cook:
 		patch.reserved, patch.target = soup[0], soup[1]
 
 		try:
-			"""
-			patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
-			patch.dst = ast.literal_eval(soup[3])
-			"""
-			patch.src = bytes(soup[2], "raw_unicode_escape")
-			patch.dst = bytes(soup[3], "raw_unicode_escape")
+			new_experimental_parsing = False
+			if(new_experimental_parsing):
+				patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
+				patch.dst = ast.literal_eval(soup[3])
+			else:
+				patch.src = bytes(soup[2], "raw_unicode_escape")
+				patch.dst = bytes(soup[3], "raw_unicode_escape")
 		except (ValueError, SyntaxError) as e:
 			raise ValueError("SRC/DST must be Python bytes literals, e.g., b'\\x90\\x90'") from e
 
