@@ -40,7 +40,7 @@ if __name__ == '__main__':
 	patch_1_new += r"\x90"*5 #6-nops in place of function call info
 	patch_1_new += r"\g<7>\g<8>\g<9>"
 
-	queue.commit(Patcher(Cook(patch_1_old, patch_1_new, "ContentManager.exe", "0")))
+	queue.commit(Patcher(Cook(patch_1_old, patch_1_new, "ContentManager.exe", "RC")))
 
 	# Part 2: id_error_copyright_mobile_msg
 	# <string id="id_error_copyright_mobile_msg" value="The file %1 is copyrighted. The transfer to your computer is not allowed." />
@@ -65,7 +65,7 @@ if __name__ == '__main__':
 	patch_2_old = InHEX.src(patch_2_old_str)
 
 	patch_2_new  = r"\g<1>\x3A\xC0\g<3>\g<4>"
-	queue.commit(Patcher(Cook(patch_2_old, patch_2_new, "ContentManager.exe", "0")))
+	queue.commit(Patcher(Cook(patch_2_old, patch_2_new, "ContentManager.exe", "RC")))
 
 	print("Pushing..")
 

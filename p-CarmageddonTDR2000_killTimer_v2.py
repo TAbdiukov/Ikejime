@@ -16,5 +16,5 @@ if __name__ == '__main__':
 
 	new = r"\g<1>\xEB\x1C\g<3>\g<4>\g<5>\g<6>\g<7>"
 
-	obj = ikepatcher.Patcher(ikepatcher.Cook(old, new, "TDR2000.exe", "0"))
+	obj = ikepatcher.Patcher(ikepatcher.Cook(old, new, "TDR2000.exe", "R"))
 	obj.payload()

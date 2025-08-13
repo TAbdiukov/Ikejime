@@ -27,8 +27,8 @@ if __name__ == '__main__':
         # see https://stackoverflow.com/q/5984633
         patch_noDX10_v2_new = InHEX.dst(r"E9 85 00\g<2>\g<3>\g<4>")
 
-        patch_unlim = Patcher(Cook(patch_unlim_old, patch_unlim_new, "Swype.exe", "1"))
-        patch_noDX10_v2 = Patcher(Cook(patch_noDX10_v2_old, patch_noDX10_v2_new, "Swype.exe", "0"))
+        patch_unlim = Patcher(Cook(patch_unlim_old, patch_unlim_new, "Swype.exe", "PRC"))
+        patch_noDX10_v2 = Patcher(Cook(patch_noDX10_v2_old, patch_noDX10_v2_new, "Swype.exe", "RC"))
 
         queue = Commits()
 

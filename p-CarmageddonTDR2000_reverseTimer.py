@@ -14,5 +14,5 @@ if __name__ == '__main__':
 	# see https://stackoverflow.com/q/5984633
 	new = r"\xD8\x44\x24\x04\xD9\x99\x3C\x01\x00\x00\g<2>\g<3>"
 
-	obj = ikepatcher.Patcher(ikepatcher.Cook(old, new, "TDR2000.exe", "0"))
+	obj = ikepatcher.Patcher(ikepatcher.Cook(old, new, "TDR2000.exe", "R"))
 	obj.payload()

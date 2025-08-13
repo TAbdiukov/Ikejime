@@ -88,13 +88,13 @@ if __name__ == '__main__':
 
         queue = Commits()
 
-        queue.commit(Patcher(Cook(patch_1_1_old, patch_1_1_new, "K10STAT.exe", "1")))
-        queue.commit(Patcher(Cook(patch_1_2_old, patch_1_2_new, "K10STAT.exe", "1")))
+        queue.commit(Patcher(Cook(patch_1_1_old, patch_1_1_new, "K10STAT.exe", "PRC")))
+        queue.commit(Patcher(Cook(patch_1_2_old, patch_1_2_new, "K10STAT.exe", "PRC")))
 
-        queue.commit(Patcher(Cook(patch_2_old, patch_2_new, "K10STAT.exe", "1")))
+        queue.commit(Patcher(Cook(patch_2_old, patch_2_new, "K10STAT.exe", "PRC")))
 
-        queue.commit(Patcher(Cook(patch_3_1_old, patch_3_1_new, "K10STAT.exe", "1")))
-        queue.commit(Patcher(Cook(patch_3_2_old, patch_3_2_new, "K10STAT.exe", "1")))
+        queue.commit(Patcher(Cook(patch_3_1_old, patch_3_1_new, "K10STAT.exe", "PRC")))
+        queue.commit(Patcher(Cook(patch_3_2_old, patch_3_2_new, "K10STAT.exe", "PRC")))
 
         print("Pushing..")
 

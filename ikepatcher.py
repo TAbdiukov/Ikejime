@@ -93,8 +93,21 @@ class Cook:
 		except (ValueError, SyntaxError) as e:
 			raise ValueError("SRC/DST must be Python bytes literals, e.g., b'\\x90\\x90'") from e
 
-		if len(soup) >= 5 and soup[4]:
-			patch.flag_use_same_length = bool(int(soup[4][0]))
+		# Flags (new: multi-letter; old: "0"/"1")
+		patch.flags = ""
+		if len(soup) >= 5:
+			raw_flags = (soup[4] or "").strip()
+			if raw_flags.isdigit():  # legacy: "0" or "1"
+				patch.flags = "P" if raw_flags[0] != "0" else ""
+			else:
+				# normalize to unique, uppercase, predictable order
+				patch.flags = "".join(sorted(set(raw_flags.upper())))
+		else:
+			# legacy default behavior: enforce same length
+			patch.flags = "P"
+
+		# keep legacy boolean in sync (used elsewhere)
+		patch.flag_use_same_length = ("P" in patch.flags)
 
 	def __str__(self):
 		return self.cookBasic()
@@ -110,6 +123,59 @@ class Commits:
 			self.commits.append(c)
 
 	def push(self):
+		# If no patch requests commit-level size preservation, behave as before.
+		wants_C = any(getattr(c, 'flags', "") and ('C' in c.flags) for c in self.commits)
+		if not wants_C:
+			for commit in self.commits:
+				commit.payload()
+			return
+
+		# --- C preflight: simulate all patches per target without writing ---
+		# 1) Parse inputs and resolve absolute paths
+		targets = {}         # path -> current bytes (in-memory)
+		original_sizes = {}  # path -> int
+
+		for commit in self.commits:
+			valid = commit.interpret_input()
+			if not valid:
+				# Show help (consistent with payload) and abort preflight
+				logging.info(commit.show_internal_help())
+				return
+			Cook.uncook_basic(commit)
+			commit.find_target()
+
+			path = str(commit.absolute_canonical_path)
+			if path not in targets:
+				with open(path, "rb") as fp:
+					buf = fp.read()
+				targets[path] = buf
+				original_sizes[path] = len(buf)
+
+		# 2) Apply patches in queue order, per-target, in-memory
+		try:
+			for commit in self.commits:
+				path = str(commit.absolute_canonical_path)
+				before = targets[path]
+				after, cnt = commit.preview_patch(before)
+				targets[path] = after
+		except Exception as e:
+			logging.info("Commit preflight failed: %s", e)
+			return
+
+		# 3) Verify size preservation per target
+		size_violations = []
+		for path, after in targets.items():
+			if len(after) != original_sizes[path]:
+				size_violations.append((path, original_sizes[path], len(after)))
+
+		if size_violations:
+			for path, old, new in size_violations:
+				logging.info("C-flag violation for %s: original size %d, after %d (Δ=%+d)",
+							 path, old, new, new - old)
+			logging.info("Aborting push due to C-flag violation(s).")
+			return
+
+		# 4) If preflight ok, run the actual payloads (will write to disk)
 		for commit in self.commits:
 			commit.payload()
 
@@ -221,10 +287,44 @@ Usage:
 		self.hash_new = None
 
 		# assert the same length for both
-		self.flag_use_same_length = True
+		self.flags = ""  # e.g., "PRC"
 
 		# secondary
 		self.tool_name = None
+
+	def preview_patch(self, data: bytes) -> (bytes, int):
+		"""
+		Apply this patch to 'data' in-memory and return (patched_bytes, match_count).
+		Raises ValueError on P/R violations.
+		"""
+		if not isinstance(data, (bytes, bytearray)):
+			raise TypeError("preview_patch expects bytes")
+
+		# P check (same as do_patch)
+		if self.has_flag('P'):
+			src_nominal = self.src.replace(b'\x5C\x78', b'')
+			same_len = (len(self.src) == len(self.dst)) or ((len(src_nominal) // 2) == len(self.dst))
+			if not same_len:
+				raise ValueError("SRC and DST lengths must match when P flag is set")
+
+		src_compiled = re.compile(self.src, flags=re.DOTALL)
+
+		def _replacer(m):
+			rep = m.expand(self.dst)
+			if self.has_flag('R') and len(rep) != len(m.group(0)):
+				raise ValueError(
+					f"R-flag violation: replacement length {len(rep)} != match length {len(m.group(0))}"
+				)
+			return rep
+
+		if self.has_flag('R'):
+			patched, cnt = re.subn(src_compiled, _replacer, data)
+		else:
+			patched, cnt = re.subn(src_compiled, self.dst, data)
+		return patched, cnt
+
+	def has_flag(self, ch: str) -> bool:
+		return isinstance(self.flags, str) and ch.upper() in self.flags
 
 	def interpret_input(self):
 		try:
@@ -327,12 +427,15 @@ Usage:
 		if not self.src:
 			raise ValueError("SRC is invalid")
 
-		if(self.flag_use_same_length):
-			src_nominal = self.src.replace(b'\x5C\x78', b'')
+		# --- P: template (pre) length check ---
+		if self.has_flag('P'):
+			src_nominal = self.src.replace(b'\x5C\x78', b'')  # strip "\x"
+			# accept either raw same-length or hex-escape-aware length
+			same_len = (len(self.src) == len(self.dst)) or ((len(src_nominal) // 2) == len(self.dst))
+			if not same_len:
+				raise ValueError("SRC and DST lengths must match when P flag is set")
 
-			if not ((len(self.src) == len(self.dst)) or ((len(src_nominal)/2) == len(self.dst))):
-				raise ValueError("SRC and DST lengths must match when same-length flag is set")
-
+		# read file
 		fp = open(self.absolute_canonical_path, "rb")
 		binary = fp.read()
 		self.hash_old = zlib.adler32(binary) & 0xFFFFFFFF
@@ -342,10 +445,27 @@ Usage:
 			raise RuntimeError("Target file is empty or unreadable")
 
 		self.clr_cnt()
-		src_compiled = re.compile(self.src, flags = re.DOTALL)
+		src_compiled = re.compile(self.src, flags=re.DOTALL)
 
-		self.cnt = -1
-		patched,self.cnt = re.subn(src_compiled, repl=self.dst, string=binary)
+		# --- R: per-match (runtime) length check via replacer ---
+		def _replacer(m):
+			rep = m.expand(self.dst)  # supports \1 and \g<1>/<name>
+			if self.has_flag('R') and len(rep) != len(m.group(0)):
+				raise ValueError(
+					f"R-flag violation: replacement length {len(rep)} != match length {len(m.group(0))}"
+				)
+			return rep
+
+		try:
+			if self.has_flag('R'):
+				patched, self.cnt = re.subn(src_compiled, _replacer, binary)
+			else:
+				patched, self.cnt = re.subn(src_compiled, self.dst, binary)
+		except ValueError as e:
+			# keep hashes consistent; do not write
+			self.hash_new = self.hash_old
+			return f"Fail - {e}"
+
 		if self.cnt < 1:
 			self.hash_new = self.hash_old
 			return "Fail - No matches found"
