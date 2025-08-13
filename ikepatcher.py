@@ -16,17 +16,19 @@ import zlib
 # for bytes
 import ast
 
-"""
-try:
-	# IMPORTED simple_eval
-	from simpleeval import simple_eval
-except ModuleNotFoundError:
-	print("Please install prerequisite,")
-	print("```")
-	print("pip install simpleeval")
-	print("```")
-	exit()
-"""
+
+use_simpleeval = False
+if(use_simpleeval):
+	try:
+		# IMPORTED simple_eval
+		from simpleeval import simple_eval
+	except ModuleNotFoundError:
+		print("Please install prerequisite,")
+		print("```")
+		print("pip install simpleeval")
+		print("```")
+		exit()
+
 
 import logging
 # for delays
