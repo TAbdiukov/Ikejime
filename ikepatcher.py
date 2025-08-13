@@ -16,6 +16,7 @@ import zlib
 # for bytes
 import ast
 
+"""
 try:
 	# IMPORTED simple_eval
 	from simpleeval import simple_eval
@@ -25,7 +26,7 @@ except ModuleNotFoundError:
 	print("pip install simpleeval")
 	print("```")
 	exit()
-
+"""
 
 import logging
 # for delays
@@ -381,7 +382,7 @@ Usage:
 
 			logger.info("="*width)
 
-	def payload_continuous(self, do_backup=False, force_overwrite=False, width=40, delay=0.5, max_attempts=120)
+	def payload_continuous(self, do_backup=False, force_overwrite=False, width=40, delay=0.5, max_attempts=120):
 		valid = self.interpret_input()
 
 		logger.info("="*width)
