@@ -251,7 +251,6 @@ class Misc:
 		this function is currently unused but will be used
 		for correcting Python 3.12+ compatibility problems
 		"""
-		return string
 		if(use_repr_approach):
 			return repr(string)[1:-1]
 		else:
