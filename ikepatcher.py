@@ -171,6 +171,18 @@ class Misc:
 		else:
 			return False
 
+	@staticmethod
+	def to_raw(string, use_repr_approach:bool=False):
+		"""
+		this function is currently unused but will be used
+		for correcting Python 3.12+ compatibility problems
+		"""
+		return string
+		if(use_repr_approach):
+			return repr(string)[1:-1]
+		else:
+			return fr"{string}"
+
 
 class Patcher:
 	HELP = """{0} - patches {1}
