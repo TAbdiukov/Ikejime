@@ -287,7 +287,7 @@ Usage:
 	def is_target_acquired(self) -> bool:
 		return self.absolute_canonical_path is not None and isinstance(self.src, (bytes, bytearray)) and len(self.src) > 0
 
-	def help_fillin(self):
+	def show_internal_help(self):
 		return self.HELP.format(self.tool_name, self.target)
 
 	# May be deprecated
@@ -347,7 +347,7 @@ Usage:
 
 		logger.info("="*width)
 		if(not valid):
-			logger.info(self.help_fillin())
+			logger.info(self.show_internal_help())
 		else:
 			Cook.uncook_basic(self)
 			logger.info("Patch tgt: "+str(self.target))
@@ -381,7 +381,7 @@ Usage:
 
 		logger.info("="*width)
 		if(not valid):
-			logger.info(self.help_fillin())
+			logger.info(self.show_internal_help())
 		else:
 			Cook.uncook_basic(self)
 			logger.info("CONTINUOUS MODE")
