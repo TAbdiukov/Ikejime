@@ -85,6 +85,9 @@ class Cook:
 				patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
 				patch.dst = ast.literal_eval(soup[3])
 			else:
+                """
+                The usage of "raw_unicode_escape" is by design
+                """
 				patch.src = bytes(soup[2], "raw_unicode_escape")
 				patch.dst = bytes(soup[3], "raw_unicode_escape")
 		except (ValueError, SyntaxError) as e:
@@ -344,6 +347,7 @@ Usage:
 		self.cnt = -1
 		patched,self.cnt = re.subn(src_compiled, repl=self.dst, string=binary)
 		if self.cnt < 1:
+            self.hash_new = self.hash_old
 			return "Fail - No matches found"
 
 		self.hash_new = zlib.adler32(patched) & 0xFFFFFFFF
