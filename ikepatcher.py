@@ -75,11 +75,11 @@ class Cook:
 
 		try:
 			"""
-            patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
+			patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
 			patch.dst = ast.literal_eval(soup[3])
-            """
-            patch.src = bytes(soup[2], "raw_unicode_escape")
-            patch.dst = bytes(soup[3], "raw_unicode_escape")
+			"""
+			patch.src = bytes(soup[2], "raw_unicode_escape")
+			patch.dst = bytes(soup[3], "raw_unicode_escape")
 		except (ValueError, SyntaxError) as e:
 			raise ValueError("SRC/DST must be Python bytes literals, e.g., b'\\x90\\x90'") from e
 
@@ -352,7 +352,7 @@ Usage:
 		logger.info("="*width)
 		if(not valid):
 			logger.info(self.show_internal_help())
-            return
+			return
 		else:
 			Cook.uncook_basic(self)
 			logger.info("Patch tgt: "+str(self.target))
@@ -387,7 +387,7 @@ Usage:
 		logger.info("="*width)
 		if(not valid):
 			logger.info(self.show_internal_help())
-            return
+			return
 		else:
 			Cook.uncook_basic(self)
 			logger.info("CONTINUOUS MODE")
@@ -402,26 +402,25 @@ Usage:
 			if(do_backup):
 				buf = self.copy_orig(force_overwrite)
 				logger.info("Backup saved to: "+str(buf))
-                
-
-			patch_result = self.do_patch()
 
 			logger.info("* Matches: "+str(self.cnt))
 
 			old = self.hash_pretty(self.hash_old)
 			new = self.hash_pretty(self.hash_new)
 
-			finish = False
-			while(not finish):
-				if(patch_result.startswith("S")):
-					print("S", flush=True)
+			attempts = 0
+			while attempts < max_attempts:
+				patch_result = self.do_patch()
+				if patch_result.startswith("S"):
 					logger.info("Patch success")
 					logger.info("* Old hash: "+old)
 					logger.info("* New hash: "+new)
-					finish = True
-				else:
-					print("F", end="", flush=True)
-					time.sleep(delay)
+					break
+				print("F", end="", flush=True)
+				time.sleep(delay)
+				attempts += 1
+			else:
+				logger.info("Patch failed after %d attempts", attempts)
 
 			logger.info("="*width)
 
