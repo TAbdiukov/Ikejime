@@ -43,9 +43,9 @@ if(VERBOSE):
 
 
 class Cook:
-	DEF_PREFIX = 'PTCH101'
+	DEF_PREFIX = 'PTCH102'
 	FILE = 'default_binfile.exe'
-	DEF_FLAGS = '0'
+	DEF_FLAGS = 'R'
 
 	DELIM = "|||"
 
