@@ -11,7 +11,7 @@ if __name__ == '__main__':
 	old = ikepatcher.InHEX.src("(FF 50 10)(3C 01)(0F 85 C9 05 00 00)")
 
 	# see https://stackoverflow.com/q/5984633
-	new = "\g<1>\g<2>\x90\x90\x90\x90\x90\x90"
+	new = r"\g<1>\g<2>\x90\x90\x90\x90\x90\x90"
 
 	obj = ikepatcher.Patcher(ikepatcher.Cook(old, new, "ContentManager.exe", "0"))
 	obj.payload()

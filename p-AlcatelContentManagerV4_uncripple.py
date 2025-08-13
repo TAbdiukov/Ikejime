@@ -34,11 +34,11 @@ if __name__ == '__main__':
 	patch_1_old = InHEX.src(patch_1_old_str)
 
 	# see https://stackoverflow.com/q/5984633
-	patch_1_new = "\g<1>\g<2>\g<3>"
-	patch_1_new += "\x90\x90" #4-or anyway
-	patch_1_new += "\xB0\x01" #5-mov al 0x01
-	patch_1_new += "\x90"*5 #6-nops in place of function call info
-	patch_1_new += "\g<7>\g<8>\g<9>"
+	patch_1_new  = r"\g<1>\g<2>\g<3>"
+	patch_1_new += r"\x90\x90" #4-or anyway
+	patch_1_new += r"\xB0\x01" #5-mov al 0x01
+	patch_1_new += r"\x90"*5 #6-nops in place of function call info
+	patch_1_new += r"\g<7>\g<8>\g<9>"
 
 	queue.commit(Patcher(Cook(patch_1_old, patch_1_new, "ContentManager.exe", "0")))
 
@@ -64,7 +64,7 @@ if __name__ == '__main__':
 
 	patch_2_old = InHEX.src(patch_2_old_str)
 
-	patch_2_new  = "\g<1>\x3A\xC0\g<3>\g<4>"
+	patch_2_new  = r"\g<1>\x3A\xC0\g<3>\g<4>"
 	queue.commit(Patcher(Cook(patch_2_old, patch_2_new, "ContentManager.exe", "0")))
 
 	print("Pushing..")
@@ -72,4 +72,3 @@ if __name__ == '__main__':
 	queue.push()
 
 	print("Done.")
-

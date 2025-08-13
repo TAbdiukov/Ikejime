@@ -14,7 +14,7 @@ if __name__ == '__main__':
 
 	old = ikepatcher.InHEX.src("(80 39 00)(75 1C)(D9 81 3C 01 00 00)(D8 64 24 04)(D9 99 3C 01 00 00)(EB 0A)(C7 81 3C 01 00 00 00 00 00 00 D9 81 3C 01 00 00)")
 
-	new = "\g<1>\xEB\x1C\g<3>\g<4>\g<5>\g<6>\g<7>"
+	new = r"\g<1>\xEB\x1C\g<3>\g<4>\g<5>\g<6>\g<7>"
 
 	obj = ikepatcher.Patcher(ikepatcher.Cook(old, new, "TDR2000.exe", "0"))
 	obj.payload()
