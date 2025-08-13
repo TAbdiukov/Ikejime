@@ -79,6 +79,9 @@ class Cook:
 		try:
 			new_experimental_parsing = False
 			if(new_experimental_parsing):
+				"""
+				This is unused, as incompatible with current inputs
+				"""
 				patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
 				patch.dst = ast.literal_eval(soup[3])
 			else:
@@ -317,14 +320,15 @@ Usage:
 		return self.dst
 
 	def do_patch(self):
+		# valid patch chk
+		if not self.src:
+			raise ValueError("SRC is invalid")
+
 		if(self.flag_use_same_length):
 			src_nominal = self.src.replace(b'\x5C\x78', b'')
 
 			if not ((len(self.src) == len(self.dst)) or ((len(src_nominal)/2) == len(self.dst))):
 				raise ValueError("SRC and DST lengths must match when same-length flag is set")
-
-		# valid patch chk
-		assert(len(str(self.src)) > 0)
 
 		fp = open(self.absolute_canonical_path, "rb")
 		binary = fp.read()
@@ -339,6 +343,8 @@ Usage:
 
 		self.cnt = -1
 		patched,self.cnt = re.subn(src_compiled, repl=self.dst, string=binary)
+		if self.cnt < 1:
+			return "Fail - No matches found"
 
 		self.hash_new = zlib.adler32(patched) & 0xFFFFFFFF
 
@@ -349,9 +355,6 @@ Usage:
 			fp.close()
 		except PermissionError:
 			return "Fail - permission denied"
-
-		if(self.cnt < 1):
-			return "Fail - No matches found"
 
 		return "Success"
 
@@ -381,7 +384,9 @@ Usage:
 
 			self.find_target()
 
-			assert(self.is_target_acquired())
+			if not (self.is_target_acquired()):
+				raise RuntimeError("Target is not found")
+
 			if(do_backup):
 				buf = self.copy_orig(force_overwrite)
 				logger.info("Backup saved to: "+str(buf))
@@ -417,20 +422,22 @@ Usage:
 
 			self.find_target()
 
-			assert(self.is_target_acquired())
+			if not (self.is_target_acquired()):
+				raise RuntimeError("Target is not found")
+
 			if(do_backup):
 				buf = self.copy_orig(force_overwrite)
 				logger.info("Backup saved to: "+str(buf))
 
 			logger.info("* Matches: "+str(self.cnt))
 
-			old = self.hash_pretty(self.hash_old)
-			new = self.hash_pretty(self.hash_new)
-
 			attempts = 0
 			while attempts < max_attempts:
 				patch_result = self.do_patch()
 				if patch_result.startswith("S"):
+					old = self.hash_pretty(self.hash_old)
+					new = self.hash_pretty(self.hash_new)
+
 					logger.info("Patch success")
 					logger.info("* Old hash: "+old)
 					logger.info("* New hash: "+new)
