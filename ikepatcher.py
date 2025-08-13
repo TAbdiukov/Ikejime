@@ -13,6 +13,8 @@ import os
 from shutil import copyfile
 # for quick hash
 import zlib
+# for bytes
+import ast
 
 try:
 	# IMPORTED simple_eval
@@ -58,25 +60,27 @@ class Cook:
 	def uncook_basic(patch, s=""):
 		d = Cook.DELIM
 
-		if(len(s) < 1):
+		if not s:
 			s = patch.txt_input
 
 		soup = s.__str__().split(d)
 		soup_cnt = len(soup)
 		# VISION:
 		# "PTCHv1.25|||Game.exe|||b'PC_AI'|||b'\x00\x00\x00\x00\x00'|||(flags)"
-		assert(soup_cnt >= 4)
+		if len(soup) < 4:
+			raise ValueError("Patch format: PREFIX|||FILE|||SRC|||DST[|||FLAGS]")
 
 		# required data
-		patch.reserved = soup[0]
-		patch.target = soup[1]
+		patch.reserved, patch.target = soup[0], soup[1]
 
-		patch.src = bytes(soup[2], "raw_unicode_escape")
-		patch.dst = bytes(soup[3], "raw_unicode_escape")
+		try:
+			patch.src = ast.literal_eval(soup[2])  # e.g., b'\x90\x90' -> bytes
+			patch.dst = ast.literal_eval(soup[3])
+		except (ValueError, SyntaxError) as e:
+			raise ValueError("SRC/DST must be Python bytes literals, e.g., b'\\x90\\x90'") from e
 
-		if(soup_cnt >= 5): #flags
-			flags = soup[4]
-			patch.flag_samelen = int(flags[0])
+		if len(soup) >= 5 and soup[4]:
+			patch.flag_use_same_length = bool(int(soup[4][0]))
 
 	def __str__(self):
 		return self.cookBasic()
@@ -191,7 +195,7 @@ Usage:
 		self.hash_new = None
 
 		# assert the same length for both
-		self.flag_samelen = True
+		self.flag_use_same_length = True
 
 		# secondary
 		self.tool_name = None
@@ -293,7 +297,7 @@ Usage:
 		return self.dst
 
 	def do_patch(self):
-		if(self.flag_samelen):
+		if(self.flag_use_same_length):
 			src_nominal = self.src.replace(b'\x5C\x78', b'')
 			assert (len(self.src) == len(self.dst)) or ((len(src_nominal)/2) == len(self.dst))
 
