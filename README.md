@@ -8,13 +8,14 @@ Discover pre-patched .exe and other binaries at: [/releases](https://github.com/
 ## Flags
 
 Semantics (short & precise)
-P — Pattern/template length check (preflight).
+
+**P** — Pattern/template length check (preflight).
 Before searching, ensure SRC and DST templates are the same length. (Your existing flag_use_same_length behavior.)
 
-R — Runtime, per‑match length check.
+**R** — Runtime, per‑match length check.
 For each match, expand the replacement (supports \1, \g<name>, \g<1> backrefs) and reject the patch if len(replacement) != len(match). Useful when SRC uses groups/regex and the actual match length may vary.
 
-C — Commit-queue size preservation.
+**C** — Commit-queue size preservation.
 For each target file touched by the queue, preflight all patches in memory (in order), and reject the push if the final byte length differs from the original for that file. Nothing is written if this fails.
 
 
