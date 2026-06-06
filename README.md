@@ -1,4 +1,10 @@
 #  Ikejime
+
+[![GitHub](https://img.shields.io/badge/GitHub-TAbdiukov/Ikejime-black?logo=github)](https://github.com/TAbdiukov/Ikejime)
+![License](https://img.shields.io/github/license/TAbdiukov/Ikejime)
+
+[![buymeacoffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/tabdiukov)
+
 Patches for desktop libraries and apps. Public set.
 
 Ikejime is inspired by [Japanese ikejime technique](https://en.wikipedia.org/wiki/Ikejime).
